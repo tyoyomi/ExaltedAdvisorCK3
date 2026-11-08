@@ -1187,3 +1187,86 @@ ea_on_ev_holder_death_cleanup_effect = {
 		remove_character_flag = ea_is_exalted_vassal
 	}
 }
+
+### Expansion pack — mass bestow / inherit
+# this = patron. Advisors (court pool) + vassals up to each cap.
+ea_mass_bestow_exalted_for_patron_effect = {
+	save_scope_as = ea_patron
+	set_variable = { name = ea_mass_bestow_advisor_count value = 0 }
+	set_variable = { name = ea_mass_bestow_vassal_count value = 0 }
+	ea_auto_assign_exalted_advisors_for_patron_effect = yes
+	if = {
+		limit = { exists = var:ea_auto_assign_count }
+		set_variable = {
+			name = ea_mass_bestow_advisor_count
+			value = var:ea_auto_assign_count
+		}
+	}
+	every_vassal = {
+		limit = {
+			ea_can_receive_exalted_vassal = yes
+		}
+		if = {
+			limit = {
+				scope:ea_patron = { ea_patron_under_ev_cap = yes }
+			}
+			ea_bestow_exalted_vassal_silent_effect = yes
+			scope:ea_patron = {
+				change_variable = { name = ea_mass_bestow_vassal_count add = 1 }
+			}
+		}
+	}
+}
+
+# this = newborn child. Inherit advisor status from an exalted parent when safe.
+ea_try_inherit_exalted_advisor_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			NOT = { has_trait = ea_exalted_advisor }
+			NOT = { has_game_rule = ea_rule_granting_disabled }
+		}
+		if = {
+			limit = {
+				exists = mother
+				mother = {
+					is_alive = yes
+					has_trait = ea_exalted_advisor
+					exists = var:ea_patron
+					var:ea_patron = {
+						is_alive = yes
+						ea_can_actor_bestow = yes
+					}
+				}
+			}
+			mother = {
+				var:ea_patron = { save_scope_as = ea_patron }
+			}
+			if = {
+				limit = { ea_can_receive_exalted_advisor = yes }
+				ea_bestow_exalted_advisor_silent_effect = yes
+			}
+		}
+		else_if = {
+			limit = {
+				exists = father
+				father = {
+					is_alive = yes
+					has_trait = ea_exalted_advisor
+					exists = var:ea_patron
+					var:ea_patron = {
+						is_alive = yes
+						ea_can_actor_bestow = yes
+					}
+				}
+			}
+			father = {
+				var:ea_patron = { save_scope_as = ea_patron }
+			}
+			if = {
+				limit = { ea_can_receive_exalted_advisor = yes }
+				ea_bestow_exalted_advisor_silent_effect = yes
+			}
+		}
+	}
+}

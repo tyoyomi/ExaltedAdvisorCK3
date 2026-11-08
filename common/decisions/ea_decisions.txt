@@ -195,3 +195,43 @@ ea_manage_exalted_vassals_decision = {
 		base = 0
 	}
 }
+
+ea_mass_bestow_exalted_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ea_mass_bestow_exalted_decision_desc
+	selection_tooltip = ea_mass_bestow_exalted_decision_tooltip
+	confirm_text = ea_mass_bestow_exalted_decision_confirm
+
+	ai_check_interval = 0
+
+	is_shown = {
+		is_alive = yes
+		NOT = { has_game_rule = ea_rule_granting_disabled }
+		OR = {
+			is_ai = no
+			has_game_rule = ea_rule_granting_player_and_ai
+		}
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = ea_tt_mass_bestow_has_eligible
+			OR = {
+				ea_has_any_auto_assign_eligible = yes
+				any_vassal = { ea_can_receive_exalted_vassal = yes }
+			}
+		}
+	}
+
+	effect = {
+		custom_tooltip = ea_mass_bestow_exalted_decision_effect_tt
+		ea_mass_bestow_exalted_for_patron_effect = yes
+		trigger_event = ea_events.1504
+	}
+
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
+}

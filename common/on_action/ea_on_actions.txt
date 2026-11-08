@@ -424,3 +424,25 @@ ea_on_death = {
 		}
 	}
 }
+
+on_birth_child = {
+	on_actions = { ea_on_birth_child }
+}
+
+ea_on_birth_child = {
+	trigger = {
+		OR = {
+			AND = {
+				exists = mother
+				mother = { has_trait = ea_exalted_advisor }
+			}
+			AND = {
+				exists = father
+				father = { has_trait = ea_exalted_advisor }
+			}
+		}
+	}
+	effect = {
+		ea_try_inherit_exalted_advisor_effect = yes
+	}
+}

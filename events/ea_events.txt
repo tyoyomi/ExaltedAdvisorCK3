@@ -328,3 +328,14 @@ ea_events.2101 = {
 		custom_tooltip = ea_events.2101.b_tt
 	}
 }
+
+ea_events.1504 = {
+	type = character_event
+	title = ea_events.1504.t
+	desc = ea_events.1504.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1504.a
+	}
+}
