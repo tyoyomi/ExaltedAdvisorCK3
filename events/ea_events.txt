@@ -1,0 +1,282 @@
+namespace = ea_events
+
+# Granter: successfully bestowed
+ea_events.1001 = {
+	type = character_event
+	title = ea_events.1001.t
+	desc = ea_events.1001.desc
+	theme = diplomacy
+
+	immediate = {
+		# scope:ea_former_advisor may be unset; recipient saved at bestow time as this event's target via patron fire
+	}
+
+	option = {
+		name = ea_events.1001.a
+	}
+}
+
+# Recipient: you were exalted
+ea_events.1002 = {
+	type = character_event
+	title = ea_events.1002.t
+	desc = ea_events.1002.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1002.a
+	}
+}
+
+# Granter: manually revoked
+ea_events.1101 = {
+	type = character_event
+	title = ea_events.1101.t
+	desc = ea_events.1101.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1101.a
+	}
+}
+
+# Granter: status stripped — left realm
+ea_events.1201 = {
+	type = character_event
+	title = ea_events.1201.t
+	desc = ea_events.1201.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1201.a
+	}
+}
+
+# Former holder: exaltation ended
+ea_events.1202 = {
+	type = character_event
+	title = ea_events.1202.t
+	desc = ea_events.1202.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1202.a
+	}
+}
+
+# Patron: advisor left realm — recall grace started
+ea_events.1401 = {
+	type = character_event
+	title = ea_events.1401.t
+	desc = ea_events.1401.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1401.a
+		custom_tooltip = ea_events.1401.a_tt
+	}
+}
+
+# Holder: exaltation wavers while abroad
+ea_events.1402 = {
+	type = character_event
+	title = ea_events.1402.t
+	desc = ea_events.1402.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1402.a
+	}
+}
+
+# Patron: recall succeeded
+ea_events.1403 = {
+	type = character_event
+	title = ea_events.1403.t
+	desc = ea_events.1403.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1403.a
+	}
+}
+
+# Patron: grace ended — stripped
+ea_events.1404 = {
+	type = character_event
+	title = ea_events.1404.t
+	desc = ea_events.1404.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1404.a
+	}
+}
+
+### CM-15 — bulk automation summaries
+ea_events.1501 = {
+	type = character_event
+	title = ea_events.1501.t
+	desc = ea_events.1501.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1501.a
+	}
+}
+
+ea_events.1502 = {
+	type = character_event
+	title = ea_events.1502.t
+	desc = ea_events.1502.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1502.a
+	}
+}
+
+ea_events.1503 = {
+	type = character_event
+	title = ea_events.1503.t
+	desc = ea_events.1503.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1503.a
+	}
+}
+
+### CM-16 — Exalted Vassal notifies
+ea_events.1601 = {
+	type = character_event
+	title = ea_events.1601.t
+	desc = ea_events.1601.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1601.a
+	}
+}
+
+ea_events.1602 = {
+	type = character_event
+	title = ea_events.1602.t
+	desc = ea_events.1602.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1602.a
+	}
+}
+
+ea_events.1611 = {
+	type = character_event
+	title = ea_events.1611.t
+	desc = ea_events.1611.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1611.a
+	}
+}
+
+ea_events.1621 = {
+	type = character_event
+	title = ea_events.1621.t
+	desc = ea_events.1621.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1621.a
+	}
+}
+
+ea_events.1622 = {
+	type = character_event
+	title = ea_events.1622.t
+	desc = ea_events.1622.desc
+	theme = diplomacy
+
+	option = {
+		name = ea_events.1622.a
+	}
+}
+
+# Management decision event — advisors
+ea_events.2001 = {
+	type = character_event
+	title = ea_events.2001.t
+	desc = ea_events.2001.desc
+	theme = diplomacy
+
+	immediate = {
+		every_living_character = {
+			limit = {
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = root
+			}
+			add_to_list = ea_my_advisors
+		}
+	}
+
+	option = {
+		name = ea_events.2001.a
+		custom_tooltip = ea_events.2001.a_tt
+	}
+
+	option = {
+		name = ea_events.2001.b
+		trigger = {
+			any_in_list = {
+				list = ea_my_advisors
+				count >= 1
+			}
+		}
+		custom_tooltip = ea_events.2001.b_tt
+		# Point players at the revoke interaction rather than duplicating logic
+	}
+
+	option = {
+		name = ea_events.2001.c
+		custom_tooltip = ea_events.2001.c_tt
+		ea_auto_assign_exalted_advisors_for_patron_effect = yes
+		trigger_event = ea_events.1501
+	}
+}
+
+# Management decision event — exalted vassals
+ea_events.2101 = {
+	type = character_event
+	title = ea_events.2101.t
+	desc = ea_events.2101.desc
+	theme = diplomacy
+
+	immediate = {
+		every_living_character = {
+			limit = {
+				has_trait = ea_exalted_vassal
+				exists = var:ea_ev_patron
+				var:ea_ev_patron = root
+			}
+			add_to_list = ea_my_vassals
+		}
+	}
+
+	option = {
+		name = ea_events.2101.a
+		custom_tooltip = ea_events.2101.a_tt
+	}
+
+	option = {
+		name = ea_events.2101.b
+		trigger = {
+			any_in_list = {
+				list = ea_my_vassals
+				count >= 1
+			}
+		}
+		custom_tooltip = ea_events.2101.b_tt
+	}
+}

@@ -1,0 +1,393 @@
+# Exalted Advisor — scripted triggers
+
+ea_is_exalted_advisor = {
+	has_trait = ea_exalted_advisor
+}
+
+ea_is_exalted_vassal = {
+	has_trait = ea_exalted_vassal
+}
+
+# Soft peer: Supreme Sovereign trait key. Fails closed if SS is absent (may log once).
+ea_character_is_supreme_sovereign = {
+	has_trait = Supreme_Sovereign
+}
+
+ea_granting_disabled = {
+	has_game_rule = ea_rule_granting_disabled
+}
+
+ea_actor_may_bestow_by_rule = {
+	NOT = { has_game_rule = ea_rule_granting_disabled }
+	trigger_if = {
+		limit = { has_game_rule = ea_rule_granting_player_only }
+		is_ai = no
+	}
+	# player_and_ai: both allowed
+}
+
+ea_patron_under_advisor_cap = {
+	# this = patron/actor. Save before any_living_character (where this becomes the iteratee).
+	# Do not use root — unset in character-interaction validity scopes.
+	trigger_if = {
+		limit = { has_game_rule = ea_rule_max_advisors_unlimited }
+		always = yes
+	}
+	trigger_else = {
+		save_temporary_scope_as = ea_cap_patron
+		custom_tooltip = {
+			text = ea_tt_under_advisor_cap
+			NOT = {
+				any_living_character = {
+					count >= ea_max_advisors_value
+					has_trait = ea_exalted_advisor
+					exists = var:ea_patron
+					var:ea_patron = scope:ea_cap_patron
+				}
+			}
+		}
+	}
+}
+
+ea_patron_under_ev_cap = {
+	trigger_if = {
+		limit = { has_game_rule = ea_rule_max_exalted_vassals_unlimited }
+		always = yes
+	}
+	trigger_else = {
+		save_temporary_scope_as = ea_ev_cap_patron
+		custom_tooltip = {
+			text = ea_tt_under_ev_cap
+			NOT = {
+				any_living_character = {
+					count >= ea_max_exalted_vassals_value
+					has_trait = ea_exalted_vassal
+					exists = var:ea_ev_patron
+					var:ea_ev_patron = scope:ea_ev_cap_patron
+				}
+			}
+		}
+	}
+}
+
+# this = candidate; $LIEGE$ = patron / actor / court owner
+# Vanilla treats councillor + consort as distinct from courtier/vassal/guest — include them
+# so spouse-spymasters and other sitting council seats are not false-abroad.
+ea_bound_to_character_trigger = {
+	OR = {
+		this = $LIEGE$
+		is_courtier_of = $LIEGE$
+		is_pool_guest_of = $LIEGE$
+		is_foreign_court_or_pool_guest_of = $LIEGE$
+		is_councillor_of = $LIEGE$
+		is_consort_of = $LIEGE$
+		is_vassal_or_below_of = $LIEGE$
+		AND = {
+			$LIEGE$ = { is_landed = no }
+			exists = host
+			$LIEGE$ = { exists = host }
+			host = $LIEGE$.host
+		}
+	}
+}
+
+# this = holder; requires var:ea_patron
+ea_in_patron_realm = {
+	exists = var:ea_patron
+	var:ea_patron = {
+		is_alive = yes
+		save_temporary_scope_as = ea_temp_patron
+	}
+	ea_bound_to_character_trigger = { LIEGE = scope:ea_temp_patron }
+}
+
+# EV realm: landed vassal chain only (courtier/consort alone does not count)
+ea_in_ev_patron_realm = {
+	exists = var:ea_ev_patron
+	var:ea_ev_patron = {
+		is_alive = yes
+		save_temporary_scope_as = ea_temp_ev_patron
+	}
+	is_vassal_or_below_of = scope:ea_temp_ev_patron
+}
+
+# Actor eligible to bestow (actor = this)
+ea_can_actor_bestow = {
+	is_alive = yes
+	ea_actor_may_bestow_by_rule = yes
+	ea_patron_under_advisor_cap = yes
+}
+
+ea_can_actor_bestow_ev = {
+	is_alive = yes
+	ea_actor_may_bestow_by_rule = yes
+	ea_patron_under_ev_cap = yes
+}
+
+# Soft realm gate for interaction is_shown (no cap / SS tooltips)
+ea_recipient_in_actor_realm = {
+	ea_bound_to_character_trigger = { LIEGE = scope:actor }
+}
+
+ea_recipient_is_vassal_of_actor = {
+	is_vassal_or_below_of = scope:actor
+}
+
+# Auto-grant rule helpers (passive sources)
+ea_auto_grant_includes_court_join = {
+	OR = {
+		has_game_rule = ea_rule_auto_grant_court_join
+		has_game_rule = ea_rule_auto_grant_court_and_councillors
+	}
+}
+
+ea_auto_grant_includes_councillors = {
+	OR = {
+		has_game_rule = ea_rule_auto_grant_councillors
+		has_game_rule = ea_rule_auto_grant_court_and_councillors
+	}
+}
+
+# Courtier / guest / councillor / consort of patron — not random realm vassals
+# this = candidate; scope:ea_patron = patron
+ea_eligible_for_auto_assign_pool = {
+	is_alive = yes
+	exists = scope:ea_patron
+	OR = {
+		is_courtier_of = scope:ea_patron
+		is_pool_guest_of = scope:ea_patron
+		is_foreign_court_or_pool_guest_of = scope:ea_patron
+		is_councillor_of = scope:ea_patron
+		is_consort_of = scope:ea_patron
+	}
+	ea_can_receive_exalted_advisor = yes
+}
+
+# Recipient eligible (recipient = this; scope:ea_patron or scope:actor = granter)
+ea_can_receive_exalted_advisor = {
+	is_alive = yes
+	NOT = { has_trait = ea_exalted_advisor }
+	trigger_if = {
+		limit = {
+			exists = scope:ea_patron
+		}
+		custom_tooltip = {
+			text = ea_tt_in_actor_realm
+			OR = {
+				AND = {
+					has_game_rule = ea_rule_self_grant_yes
+					this = scope:ea_patron
+				}
+				ea_bound_to_character_trigger = { LIEGE = scope:ea_patron }
+			}
+		}
+		trigger_if = {
+			limit = { has_game_rule = ea_rule_self_grant_no }
+			this != scope:ea_patron
+		}
+	}
+	trigger_else_if = {
+		limit = {
+			exists = scope:actor
+		}
+		custom_tooltip = {
+			text = ea_tt_in_actor_realm
+			OR = {
+				AND = {
+					has_game_rule = ea_rule_self_grant_yes
+					this = scope:actor
+				}
+				ea_bound_to_character_trigger = { LIEGE = scope:actor }
+			}
+		}
+		trigger_if = {
+			limit = { has_game_rule = ea_rule_self_grant_no }
+			this != scope:actor
+		}
+	}
+	trigger_else = {
+		always = no
+	}
+	trigger_if = {
+		limit = { has_game_rule = ea_rule_mutual_exclusion_block_with_sovereign }
+		custom_tooltip = {
+			text = ea_tt_blocks_with_sovereign
+			NOT = { ea_character_is_supreme_sovereign = yes }
+		}
+	}
+	trigger_if = {
+		limit = { has_game_rule = ea_rule_advisor_vassal_exclusion_block }
+		custom_tooltip = {
+			text = ea_tt_blocks_with_exalted_vassal
+			NOT = { has_trait = ea_exalted_vassal }
+		}
+	}
+}
+
+# EV recipient: landed vassal chain of patron; not courtier-only
+ea_can_receive_exalted_vassal = {
+	is_alive = yes
+	NOT = { has_trait = ea_exalted_vassal }
+	trigger_if = {
+		limit = { exists = scope:ea_patron }
+		custom_tooltip = {
+			text = ea_tt_must_be_vassal
+			OR = {
+				AND = {
+					has_game_rule = ea_rule_self_grant_yes
+					this = scope:ea_patron
+				}
+				is_vassal_or_below_of = scope:ea_patron
+			}
+		}
+		trigger_if = {
+			limit = { has_game_rule = ea_rule_self_grant_no }
+			this != scope:ea_patron
+		}
+	}
+	trigger_else_if = {
+		limit = { exists = scope:actor }
+		custom_tooltip = {
+			text = ea_tt_must_be_vassal
+			OR = {
+				AND = {
+					has_game_rule = ea_rule_self_grant_yes
+					this = scope:actor
+				}
+				is_vassal_or_below_of = scope:actor
+			}
+		}
+		trigger_if = {
+			limit = { has_game_rule = ea_rule_self_grant_no }
+			this != scope:actor
+		}
+	}
+	trigger_else = {
+		always = no
+	}
+	trigger_if = {
+		limit = { has_game_rule = ea_rule_mutual_exclusion_block_with_sovereign }
+		custom_tooltip = {
+			text = ea_tt_blocks_with_sovereign
+			NOT = { ea_character_is_supreme_sovereign = yes }
+		}
+	}
+	trigger_if = {
+		limit = { has_game_rule = ea_rule_advisor_vassal_exclusion_block }
+		custom_tooltip = {
+			text = ea_tt_blocks_with_exalted_advisor
+			NOT = { has_trait = ea_exalted_advisor }
+		}
+	}
+}
+
+ea_should_strip_exalted_advisor = {
+	has_trait = ea_exalted_advisor
+	has_game_rule = ea_rule_strip_on_leave_on
+	NAND = {
+		ea_in_patron_realm = yes
+	}
+}
+
+ea_should_strip_exalted_vassal = {
+	has_trait = ea_exalted_vassal
+	has_game_rule = ea_rule_strip_on_leave_on
+	NAND = {
+		ea_in_ev_patron_realm = yes
+	}
+}
+
+ea_actor_is_patron_of_recipient = {
+	scope:recipient = {
+		has_trait = ea_exalted_advisor
+		exists = var:ea_patron
+		var:ea_patron = scope:actor
+	}
+}
+
+ea_actor_is_ev_patron_of_recipient = {
+	scope:recipient = {
+		has_trait = ea_exalted_vassal
+		exists = var:ea_ev_patron
+		var:ea_ev_patron = scope:actor
+	}
+}
+
+# Councillor of their EA patron (seat multipliers apply)
+ea_is_councillor_for_patron = {
+	has_trait = ea_exalted_advisor
+	exists = var:ea_patron
+	var:ea_patron = { is_alive = yes }
+	is_councillor_of = var:ea_patron
+}
+
+# Grace window before strip-on-leave
+ea_in_recall_grace = {
+	has_trait = ea_exalted_advisor
+	has_character_flag = ea_pending_strip
+}
+
+# Would have stripped under v0.1, grace available, not already in grace
+ea_should_enter_recall_grace = {
+	ea_should_strip_exalted_advisor = yes
+	has_game_rule = ea_rule_recall_grace_on
+	NOT = { ea_in_recall_grace = yes }
+}
+
+# Grace flag still set but timed deadline variable expired, and still abroad
+ea_should_finalize_strip_after_grace = {
+	ea_in_recall_grace = yes
+	NOT = { has_variable = ea_recall_grace_ends }
+	NAND = {
+		ea_in_patron_realm = yes
+	}
+}
+
+# Unlanded courtier-style pull target (interaction: scope:actor = patron)
+ea_is_recallable = {
+	is_alive = yes
+	is_ruler = no
+	NOT = { is_imprisoned = yes }
+	custom_tooltip = {
+		text = ea_tt_recallable
+		can_recruit_character_to_court_trigger = {
+			RECRUITER = scope:actor
+			RECRUITEE = this
+		}
+	}
+}
+
+# Has at least one EA bound to this as patron
+ea_has_any_exalted_advisor = {
+	save_temporary_scope_as = ea_check_patron
+	any_living_character = {
+		has_trait = ea_exalted_advisor
+		exists = var:ea_patron
+		var:ea_patron = scope:ea_check_patron
+	}
+}
+
+ea_has_any_exalted_vassal = {
+	save_temporary_scope_as = ea_check_ev_patron
+	any_living_character = {
+		has_trait = ea_exalted_vassal
+		exists = var:ea_ev_patron
+		var:ea_ev_patron = scope:ea_check_ev_patron
+	}
+}
+
+# this = patron — at least one courtier/guest/councillor/consort eligible for silent bestow
+ea_has_any_auto_assign_eligible = {
+	save_temporary_scope_as = ea_patron
+	OR = {
+		any_councillor = {
+			ea_eligible_for_auto_assign_pool = yes
+		}
+		any_consort = {
+			ea_eligible_for_auto_assign_pool = yes
+		}
+		any_courtier_or_guest = {
+			ea_eligible_for_auto_assign_pool = yes
+		}
+	}
+}

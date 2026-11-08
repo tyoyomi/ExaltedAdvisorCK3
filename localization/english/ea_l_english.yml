@@ -1,0 +1,265 @@
+﻿l_english:
+ # Trait
+ trait_ea_exalted_advisor:0 "Exalted Advisor"
+ trait_ea_exalted_advisor_desc:0 "Appointed to stand among the greatest helpers of their patron's realm. Brilliant, formidable, and clearly outscaled by a Supreme Sovereign."
+ trait_ea_exalted_vassal:0 "Exalted Vassal"
+ trait_ea_exalted_vassal_desc:0 "A landed pillar of their patron's realm — terrifyingly competent in rule and war, yet still a helper beneath a Supreme Sovereign. Distinct from Exalted Advisors, who shine at court and council."
+
+ # Interactions
+ ea_bestow_exalted_advisor_interaction:0 "Bestow Exalted Advisor"
+ ea_bestow_exalted_advisor_interaction_desc:0 "Elevate [recipient.GetShortUIName] as an Exalted Advisor of your realm. The honor lasts only while they remain bound to you."
+ ea_bestow_exalted_advisor_interaction_extra_icon:0 "$ea_bestow_exalted_advisor_interaction$"
+
+ ea_revoke_exalted_advisor_interaction:0 "Revoke Exalted Advisor"
+ ea_revoke_exalted_advisor_interaction_desc:0 "Strip [recipient.GetShortUIName] of the Exalted Advisor honor. They keep their life and station, but not this exalted status."
+
+ ea_recall_exalted_advisor_interaction:0 "Recall Exalted Advisor"
+ ea_recall_exalted_advisor_interaction_desc:0 "Command [recipient.GetShortUIName] to return to your court before their Exalted Advisor honor lapses."
+
+ ea_bestow_exalted_vassal_interaction:0 "Bestow Exalted Vassal"
+ ea_bestow_exalted_vassal_interaction_desc:0 "Elevate [recipient.GetShortUIName] as an Exalted Vassal. Only your landed vassals may receive this honor, and it lasts only while they remain your vassal."
+ ea_bestow_exalted_vassal_interaction_extra_icon:0 "$ea_bestow_exalted_vassal_interaction$"
+
+ ea_revoke_exalted_vassal_interaction:0 "Revoke Exalted Vassal"
+ ea_revoke_exalted_vassal_interaction_desc:0 "Strip [recipient.GetShortUIName] of the Exalted Vassal honor."
+
+ # Decisions
+ ea_manage_exalted_advisors_decision:0 "Manage Exalted Advisors"
+ ea_manage_exalted_advisors_decision_desc:0 "Review who carries your Exalted Advisor honor. Bestow, revoke, and recall are done through character interactions; this decision opens a quick summary. Bulk auto-assign and strip are sibling decisions."
+ ea_manage_exalted_advisors_decision_tooltip:0 "Open a summary of your Exalted Advisors and how to appoint or strip them"
+ ea_manage_exalted_advisors_decision_confirm:0 "Review Advisors"
+ ea_manage_exalted_advisors_decision_effect_tt:0 "You will receive a brief overview of your Exalted Advisors"
+
+ ea_auto_assign_exalted_advisors_decision:0 "Auto-Assign Exalted Advisors"
+ ea_auto_assign_exalted_advisors_decision_desc:0 "Silently elevate every eligible councillor, consort, and courtier/guest up to your Exalted Advisor cap. For a full court-flood fantasy, set Maximum Advisors to Unlimited (or 5). Random realm vassals are not included — use Exalted Vassal for those."
+ ea_auto_assign_exalted_advisors_decision_tooltip:0 "Elevate all eligible courtiers and councillors until the advisor cap"
+ ea_auto_assign_exalted_advisors_decision_confirm:0 "Elevate Eligible"
+ ea_auto_assign_exalted_advisors_decision_effect_tt:0 "Eligible targets are exalted silently until the cap; leftovers are skipped"
+
+ ea_auto_strip_all_exalted_advisors_decision:0 "Strip All Exalted Advisors"
+ ea_auto_strip_all_exalted_advisors_decision_desc:0 "Intentionally revoke the Exalted Advisor honor from everyone bound to you. This is a full clear — not the same as flushing those who left the realm."
+ ea_auto_strip_all_exalted_advisors_decision_tooltip:0 "Revoke every Exalted Advisor bound to you"
+ ea_auto_strip_all_exalted_advisors_decision_confirm:0 "Strip All"
+ ea_auto_strip_all_exalted_advisors_decision_effect_tt:0 "All of your Exalted Advisors are revoked silently"
+
+ ea_auto_strip_unworthy_exalted_advisors_decision:0 "Strip Unworthy Exalted Advisors"
+ ea_auto_strip_unworthy_exalted_advisors_decision_desc:0 "Flush advisors who should lose the honor under strip-on-leave and recall-grace rules (abroad / expired grace). Loyal in-realm advisors are left untouched. Distinct from Strip All (intentional clear) and from normal leave-realm auto-strip."
+ ea_auto_strip_unworthy_exalted_advisors_decision_tooltip:0 "Evaluate strip for advisors who left your realm"
+ ea_auto_strip_unworthy_exalted_advisors_decision_confirm:0 "Flush Unworthy"
+ ea_auto_strip_unworthy_exalted_advisors_decision_effect_tt:0 "Advisors abroad or past recall grace are stripped; in-realm advisors remain"
+
+ ea_manage_exalted_vassals_decision:0 "Manage Exalted Vassals"
+ ea_manage_exalted_vassals_decision_desc:0 "Review who carries your Exalted Vassal honor. Bestow and revoke are done through character interactions on your landed vassals."
+ ea_manage_exalted_vassals_decision_tooltip:0 "Open a summary of your Exalted Vassals"
+ ea_manage_exalted_vassals_decision_confirm:0 "Review Vassals"
+ ea_manage_exalted_vassals_decision_effect_tt:0 "You will receive a brief overview of your Exalted Vassals"
+
+ # Modifiers — council service
+ ea_council_service_modifier:0 "Exalted Council Service"
+ ea_council_service_modifier_desc:0 "Serving on their patron's council focuses an Exalted Advisor's brilliance."
+ ea_council_chancellor_modifier:0 "Exalted Chancellor"
+ ea_council_chancellor_modifier_desc:0 "Seat synergy for an Exalted Advisor as Chancellor."
+ ea_council_marshal_modifier:0 "Exalted Marshal"
+ ea_council_marshal_modifier_desc:0 "Seat synergy for an Exalted Advisor as Marshal."
+ ea_council_steward_modifier:0 "Exalted Steward"
+ ea_council_steward_modifier_desc:0 "Seat synergy for an Exalted Advisor as Steward."
+ ea_council_spymaster_modifier:0 "Exalted Spymaster"
+ ea_council_spymaster_modifier_desc:0 "Seat synergy for an Exalted Advisor as Spymaster."
+ ea_council_chaplain_modifier:0 "Exalted Court Chaplain"
+ ea_council_chaplain_modifier_desc:0 "Seat synergy for an Exalted Advisor as Court Chaplain."
+ ea_council_spouse_modifier:0 "Exalted Spouse Councillor"
+ ea_council_spouse_modifier_desc:0 "Seat synergy for an Exalted Advisor as Spouse Councillor."
+
+ # Modifiers — court aura
+ ea_court_aura_1_modifier:0 "Exalted Court Aura"
+ ea_court_aura_1_modifier_desc:0 "One Exalted Advisor serves in your realm, sharpening your court."
+ ea_court_aura_2_modifier:0 "Court of Exalted Advisors"
+ ea_court_aura_2_modifier_desc:0 "Two Exalted Advisors serve in your realm."
+ ea_court_aura_3_modifier:0 "Court of Exalted Advisors"
+ ea_court_aura_3_modifier_desc:0 "Three or more Exalted Advisors serve in your realm."
+
+ # Tooltips
+ ea_tt_under_advisor_cap:0 "You are under your Exalted Advisor cap"
+ ea_tt_under_ev_cap:0 "You are under your Exalted Vassal cap"
+ ea_tt_blocks_with_sovereign:0 "Cannot stack with Supreme Sovereign"
+ ea_tt_blocks_with_exalted_vassal:0 "Cannot stack with Exalted Vassal"
+ ea_tt_blocks_with_exalted_advisor:0 "Cannot stack with Exalted Advisor"
+ ea_tt_actor_may_bestow:0 "You may bestow Exalted Advisor"
+ ea_tt_actor_may_bestow_ev:0 "You may bestow Exalted Vassal"
+ ea_tt_can_receive_exalted_advisor:0 "Target may receive Exalted Advisor"
+ ea_tt_can_receive_exalted_vassal:0 "Target may receive Exalted Vassal"
+ ea_tt_in_actor_realm:0 "Target is in your realm (courtier, guest, vassal, consort, or councillor)"
+ ea_tt_must_be_vassal:0 "Target is your landed vassal (or below)"
+ ea_tt_is_your_exalted_advisor:0 "This is your Exalted Advisor"
+ ea_tt_is_your_exalted_vassal:0 "This is your Exalted Vassal"
+ ea_tt_recallable:0 "Target can be recalled to your court"
+ ea_tt_in_recall_grace:0 "Recall is available while exaltation is at risk or strip-on-leave is off"
+ ea_tt_not_abroad:0 "Target is abroad or in recall grace"
+ ea_tt_auto_assign_has_eligible:0 "At least one eligible councillor, consort, or courtier/guest can be elevated"
+
+ # Game rules
+ rule_ea_rule_granting:0 "Exalted Advisor: Who May Bestow"
+ setting_ea_rule_granting_player_only:0 "Player Only"
+ setting_ea_rule_granting_player_only_desc:0 "Only human players may bestow Exalted Advisor or Exalted Vassal honors."
+ setting_ea_rule_granting_player_and_ai:0 "#high Player and AI#!"
+ setting_ea_rule_granting_player_and_ai_desc:0 "Players and AI rulers may bestow honors. AI prefers councilors, high-opinion courtiers, and valued vassals. Passive auto-grant for AI also requires this setting."
+ setting_ea_rule_granting_disabled:0 "Disabled"
+ setting_ea_rule_granting_disabled_desc:0 "Bestowing is disabled. Existing holders are unaffected until revoked or stripped."
+
+ rule_ea_rule_max_advisors:0 "Exalted Advisor: Maximum per Patron"
+ setting_ea_rule_max_advisors_1:0 "1"
+ setting_ea_rule_max_advisors_1_desc:0 "Each patron may have at most one Exalted Advisor at a time."
+ setting_ea_rule_max_advisors_3:0 "3"
+ setting_ea_rule_max_advisors_3_desc:0 "Each patron may have up to three Exalted Advisors at a time."
+ setting_ea_rule_max_advisors_5:0 "5"
+ setting_ea_rule_max_advisors_5_desc:0 "Each patron may have up to five Exalted Advisors at a time. Recommended with Auto-Grant for fuller courts."
+ setting_ea_rule_max_advisors_unlimited:0 "#high Unlimited#!"
+ setting_ea_rule_max_advisors_unlimited_desc:0 "No cap on concurrent Exalted Advisors per patron. Recommended for court-flood auto-grant fantasy."
+
+ rule_ea_rule_strip_on_leave:0 "Exalted Status: Strip on Leaving Realm"
+ setting_ea_rule_strip_on_leave_on:0 "On"
+ setting_ea_rule_strip_on_leave_on_desc:0 "Exalted Advisor and Exalted Vassal status is removed when the holder leaves the patron's realm (advisors: after recall grace, if enabled; vassals: on evaluate, no recall grace)."
+ setting_ea_rule_strip_on_leave_off:0 "Off"
+ setting_ea_rule_strip_on_leave_off_desc:0 "Leaving the realm does not auto-strip either honor. Manual revoke still works. Advisor recall remains available as a convenience."
+
+ rule_ea_rule_mutual_exclusion:0 "Exalted Status: Supreme Sovereign Exclusion"
+ setting_ea_rule_mutual_exclusion_block_with_sovereign:0 "Block with Supreme Sovereign"
+ setting_ea_rule_mutual_exclusion_block_with_sovereign_desc:0 "Characters with Supreme Sovereign cannot receive Exalted Advisor or Exalted Vassal. Gaining Sovereign later strips those honors."
+ setting_ea_rule_mutual_exclusion_allow_both:0 "Allow Both"
+ setting_ea_rule_mutual_exclusion_allow_both_desc:0 "Exalted Advisor / Exalted Vassal and Supreme Sovereign may stack on the same character."
+
+ rule_ea_rule_self_grant:0 "Exalted Status: Self Grant"
+ setting_ea_rule_self_grant_no:0 "No"
+ setting_ea_rule_self_grant_no_desc:0 "You cannot bestow Exalted Advisor or Exalted Vassal on yourself via interaction. Ruler Designer can still apply the traits."
+ setting_ea_rule_self_grant_yes:0 "Yes"
+ setting_ea_rule_self_grant_yes_desc:0 "You may bestow Exalted Advisor or Exalted Vassal on yourself."
+
+ rule_ea_rule_court_aura:0 "Exalted Advisor: Court Aura"
+ setting_ea_rule_court_aura_on:0 "On"
+ setting_ea_rule_court_aura_on_desc:0 "While Exalted Advisors serve in your realm, you gain a tiered Exalted Court Aura. Exalted Vassals do not feed the aura."
+ setting_ea_rule_court_aura_off:0 "Off"
+ setting_ea_rule_court_aura_off_desc:0 "Court aura bonuses for the patron are disabled."
+
+ rule_ea_rule_recall_grace:0 "Exalted Advisor: Recall Grace"
+ setting_ea_rule_recall_grace_on:0 "On"
+ setting_ea_rule_recall_grace_on_desc:0 "When an advisor leaves your realm, a one-year grace lets you Recall them before exaltation strips. Exalted Vassals have no recall grace."
+ setting_ea_rule_recall_grace_off:0 "Off"
+ setting_ea_rule_recall_grace_off_desc:0 "Leaving the realm strips advisors immediately when Strip on Leave is on (v0.1 behavior)."
+
+ rule_ea_rule_auto_grant:0 "Exalted Advisor: Auto-Grant"
+ setting_ea_rule_auto_grant_off:0 "Off"
+ setting_ea_rule_auto_grant_off_desc:0 "No passive exaltation. Manual bestow and the Auto-Assign decision still work."
+ setting_ea_rule_auto_grant_court_join:0 "On Court Join"
+ setting_ea_rule_auto_grant_court_join_desc:0 "Silently exalt eligible characters who join your court, up to the advisor cap. Pair with Unlimited (or 5) for court-flood fantasy."
+ setting_ea_rule_auto_grant_councillors:0 "On Councillor Appointment"
+ setting_ea_rule_auto_grant_councillors_desc:0 "Silently exalt characters who become your councillors, up to the advisor cap."
+ setting_ea_rule_auto_grant_court_and_councillors:0 "#high Court Join and Councillors#!"
+ setting_ea_rule_auto_grant_court_and_councillors_desc:0 "Both court-join and councillor appointment trigger silent exaltation, still respecting the advisor cap."
+
+ rule_ea_rule_auto_strip_decisions:0 "Exalted Advisor: Bulk Strip Decisions"
+ setting_ea_rule_auto_strip_decisions_on:0 "On"
+ setting_ea_rule_auto_strip_decisions_on_desc:0 "Show Strip All and Strip Unworthy decisions. Passive strip-on-leave is unchanged."
+ setting_ea_rule_auto_strip_decisions_off:0 "Off"
+ setting_ea_rule_auto_strip_decisions_off_desc:0 "Hide bulk strip decisions. Passive strip-on-leave and manual revoke still work."
+
+ rule_ea_rule_max_exalted_vassals:0 "Exalted Vassal: Maximum per Patron"
+ setting_ea_rule_max_exalted_vassals_1:0 "1"
+ setting_ea_rule_max_exalted_vassals_1_desc:0 "Each patron may have at most one Exalted Vassal at a time."
+ setting_ea_rule_max_exalted_vassals_3:0 "3"
+ setting_ea_rule_max_exalted_vassals_3_desc:0 "Each patron may have up to three Exalted Vassals at a time."
+ setting_ea_rule_max_exalted_vassals_5:0 "5"
+ setting_ea_rule_max_exalted_vassals_5_desc:0 "Each patron may have up to five Exalted Vassals at a time."
+ setting_ea_rule_max_exalted_vassals_unlimited:0 "#high Unlimited#!"
+ setting_ea_rule_max_exalted_vassals_unlimited_desc:0 "No cap on concurrent Exalted Vassals per patron."
+
+ rule_ea_rule_advisor_vassal_exclusion:0 "Exalted Status: Advisor / Vassal Exclusion"
+ setting_ea_rule_advisor_vassal_exclusion_block:0 "Block Both"
+ setting_ea_rule_advisor_vassal_exclusion_block_desc:0 "A character cannot hold Exalted Advisor and Exalted Vassal together. Bestow refuses if the other is present; yearly cleanup strips Advisor if both somehow exist (Vassal preferred)."
+ setting_ea_rule_advisor_vassal_exclusion_allow_both:0 "Allow Both"
+ setting_ea_rule_advisor_vassal_exclusion_allow_both_desc:0 "Exalted Advisor and Exalted Vassal may stack on the same character."
+
+ # Events
+ ea_events.1001.t:0 "An Exalted Advisor Appointed"
+ ea_events.1001.desc:0 "You have elevated a trusted figure to Exalted Advisor. Their brilliance will serve your realm — so long as they remain bound to it."
+ ea_events.1001.a:0 "Excellent."
+
+ ea_events.1002.t:0 "Exalted"
+ ea_events.1002.desc:0 "Your patron has named you Exalted Advisor. The honor is great — and tied to remaining in their realm."
+ ea_events.1002.a:0 "I will prove worthy."
+
+ ea_events.1101.t:0 "Exalted Advisor Revoked"
+ ea_events.1101.desc:0 "You have deliberately stripped the Exalted Advisor honor from one of your people."
+ ea_events.1101.a:0 "So be it."
+
+ ea_events.1201.t:0 "Exaltation Lapsed"
+ ea_events.1201.desc:0 "An Exalted Advisor no longer remains in your realm. The honor has lapsed — not by your decree, but by departure from your court and vassalage."
+ ea_events.1201.a:0 "A pity."
+
+ ea_events.1202.t:0 "Exaltation Ended"
+ ea_events.1202.desc:0 "Your Exalted Advisor status has ended. You are no longer bound within your former patron's realm, and the honor has slipped away."
+ ea_events.1202.a:0 "I understand."
+
+ ea_events.1401.t:0 "Exaltation at Risk"
+ ea_events.1401.desc:0 "An Exalted Advisor has left your realm. Their honor will lapse unless you recall them before the grace ends.\n\nUse the Recall Exalted Advisor interaction, or lose the exaltation when time runs out."
+ ea_events.1401.a:0 "I will recall them"
+ ea_events.1401.a_tt:0 "Right-click the advisor and choose Recall Exalted Advisor"
+
+ ea_events.1402.t:0 "Honor Wavering"
+ ea_events.1402.desc:0 "Far from your patron's realm, your Exalted Advisor honor wavers. Return — or be recalled — before it fades."
+ ea_events.1402.a:0 "I must not linger"
+
+ ea_events.1403.t:0 "Advisor Recalled"
+ ea_events.1403.desc:0 "Your Exalted Advisor has returned to court. The bond holds, and their service continues."
+ ea_events.1403.a:0 "Welcome home"
+
+ ea_events.1404.t:0 "Grace Expired"
+ ea_events.1404.desc:0 "The recall window closed. An Exalted Advisor remained abroad, and the honor has been stripped."
+ ea_events.1404.a:0 "Too late"
+
+ ea_events.1501.t:0 "Court Elevated"
+ ea_events.1501.desc:0 "You have elevated every eligible councillor, consort, and courtier up to your Exalted Advisor cap. Anyone beyond the cap was skipped — raise Maximum Advisors (Unlimited or 5) if you want a fuller court."
+ ea_events.1501.a:0 "A court worthy of legend"
+
+ ea_events.1502.t:0 "Honor Cleared"
+ ea_events.1502.desc:0 "You have intentionally stripped the Exalted Advisor honor from all who carried it in your name. This was a full clear, not a realm-lapse flush."
+ ea_events.1502.a:0 "Done"
+
+ ea_events.1503.t:0 "Unworthy Flushed"
+ ea_events.1503.desc:0 "Advisors who left your realm — or whose recall grace expired — have been evaluated and stripped where the rules demand. Loyal in-realm advisors remain exalted."
+ ea_events.1503.a:0 "The court is pruned"
+
+ ea_events.1601.t:0 "An Exalted Vassal Appointed"
+ ea_events.1601.desc:0 "You have elevated a landed vassal to Exalted Vassal. Their strength will shore up your realm — so long as they remain your vassal."
+ ea_events.1601.a:0 "Let them rule well."
+
+ ea_events.1602.t:0 "Exalted Vassal"
+ ea_events.1602.desc:0 "Your liege has named you Exalted Vassal. The honor is great — and tied to remaining their vassal."
+ ea_events.1602.a:0 "I will hold the land."
+
+ ea_events.1611.t:0 "Exalted Vassal Revoked"
+ ea_events.1611.desc:0 "You have deliberately stripped the Exalted Vassal honor from one of your vassals."
+ ea_events.1611.a:0 "So be it."
+
+ ea_events.1621.t:0 "Vassal Exaltation Lapsed"
+ ea_events.1621.desc:0 "An Exalted Vassal is no longer bound under you. The honor has lapsed with their independence or transfer."
+ ea_events.1621.a:0 "A pity."
+
+ ea_events.1622.t:0 "Vassal Exaltation Ended"
+ ea_events.1622.desc:0 "Your Exalted Vassal status has ended. You are no longer a vassal of your former patron, and the honor has slipped away."
+ ea_events.1622.a:0 "I understand."
+
+ ea_events.2001.t:0 "Your Exalted Advisors"
+ ea_events.2001.desc:0 "Use character interactions to Bestow, Revoke, or Recall the Exalted Advisor honor. Bulk Auto-Assign and Strip decisions sit beside Manage in the decision list.\n\nBestow: right-click a courtier, guest, or vassal.\nRevoke: right-click one of your Exalted Advisors.\nRecall: right-click an advisor who is abroad."
+ ea_events.2001.a:0 "I will use interactions"
+ ea_events.2001.a_tt:0 "Bestow, Revoke, and Recall are available as character interactions"
+ ea_events.2001.b:0 "I still have Exalted Advisors"
+ ea_events.2001.b_tt:0 "Right-click an Exalted Advisor to revoke their honor"
+ ea_events.2001.c:0 "Auto-assign eligible now"
+ ea_events.2001.c_tt:0 "Silently elevate eligible councillors, consorts, and courtiers up to the cap"
+
+ ea_events.2101.t:0 "Your Exalted Vassals"
+ ea_events.2101.desc:0 "Use character interactions to Bestow or Revoke the Exalted Vassal honor on your landed vassals. Courtier-only characters should use Exalted Advisor instead.\n\nBestow: right-click a vassal.\nRevoke: right-click one of your Exalted Vassals."
+ ea_events.2101.a:0 "I will use interactions"
+ ea_events.2101.a_tt:0 "Bestow and Revoke Exalted Vassal are available as character interactions"
+ ea_events.2101.b:0 "I still have Exalted Vassals"
+ ea_events.2101.b_tt:0 "Right-click an Exalted Vassal to revoke their honor"

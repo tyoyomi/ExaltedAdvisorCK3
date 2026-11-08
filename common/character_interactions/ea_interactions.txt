@@ -1,0 +1,423 @@
+ea_bestow_exalted_advisor_interaction = {
+	category = interaction_category_friendly
+	icon = council
+	interface_priority = 60
+	common_interaction = yes
+
+	desc = ea_bestow_exalted_advisor_interaction_desc
+
+	auto_accept = yes
+
+	is_shown = {
+		NOT = { has_game_rule = ea_rule_granting_disabled }
+		scope:actor = {
+			is_alive = yes
+			ea_actor_may_bestow_by_rule = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			NOT = { has_trait = ea_exalted_advisor }
+			# Hide when not bound to actor's realm — prevents shown-but-disabled on
+			# random characters. Cap / SS exclusion stay in is_valid for tooltips.
+			ea_recipient_in_actor_realm = yes
+		}
+		OR = {
+			AND = {
+				has_game_rule = ea_rule_self_grant_yes
+				scope:actor = scope:recipient
+			}
+			scope:actor != scope:recipient
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			custom_tooltip = {
+				text = ea_tt_actor_may_bestow
+				ea_can_actor_bestow = yes
+			}
+		}
+		scope:recipient = {
+			custom_tooltip = {
+				text = ea_tt_can_receive_exalted_advisor
+				ea_can_receive_exalted_advisor = yes
+			}
+		}
+	}
+
+	on_accept = {
+		scope:actor = { save_scope_as = ea_patron }
+		scope:recipient = {
+			ea_bestow_exalted_advisor_effect = yes
+		}
+	}
+
+	ai_targets = {
+		ai_recipients = courtiers
+		chance = 0.1
+	}
+	ai_targets = {
+		ai_recipients = vassals
+		chance = 0.05
+	}
+	ai_target_quick_trigger = {
+		adult = yes
+	}
+	ai_frequency = 120
+
+	ai_potential = {
+		has_game_rule = ea_rule_granting_player_and_ai
+		ea_patron_under_advisor_cap = yes
+	}
+
+	ai_will_do = {
+		base = 0
+		modifier = {
+			add = 25
+			scope:recipient = {
+				is_councillor_of = scope:actor
+			}
+		}
+		modifier = {
+			add = 10
+			scope:actor = {
+				opinion = {
+					target = scope:recipient
+					value >= 50
+				}
+			}
+		}
+		modifier = {
+			add = -100
+			AND = {
+				has_game_rule = ea_rule_mutual_exclusion_block_with_sovereign
+				scope:recipient = {
+					ea_character_is_supreme_sovereign = yes
+				}
+			}
+		}
+		modifier = {
+			add = -100
+			AND = {
+				has_game_rule = ea_rule_advisor_vassal_exclusion_block
+				scope:recipient = {
+					has_trait = ea_exalted_vassal
+				}
+			}
+		}
+	}
+}
+
+ea_revoke_exalted_advisor_interaction = {
+	category = interaction_category_hostile
+	icon = scroll_scales
+	interface_priority = 59
+	common_interaction = yes
+
+	desc = ea_revoke_exalted_advisor_interaction_desc
+
+	auto_accept = yes
+
+	is_shown = {
+		scope:actor = {
+			is_alive = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:actor
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			custom_tooltip = {
+				text = ea_tt_is_your_exalted_advisor
+				ea_actor_is_patron_of_recipient = yes
+			}
+		}
+	}
+
+	on_accept = {
+		scope:actor = { save_scope_as = ea_patron }
+		scope:recipient = {
+			ea_revoke_exalted_advisor_effect = yes
+		}
+	}
+
+	ai_targets = {
+		ai_recipients = courtiers
+		chance = 0.05
+	}
+	ai_targets = {
+		ai_recipients = vassals
+		chance = 0.05
+	}
+	ai_frequency = 240
+
+	ai_potential = {
+		has_game_rule = ea_rule_granting_player_and_ai
+		always = no # AI does not casually revoke in v1
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+ea_recall_exalted_advisor_interaction = {
+	category = interaction_category_friendly
+	icon = guest
+	interface_priority = 58
+	common_interaction = yes
+
+	desc = ea_recall_exalted_advisor_interaction_desc
+
+	auto_accept = yes
+
+	is_shown = {
+		scope:actor = {
+			is_alive = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:actor
+			OR = {
+				NOT = { ea_in_patron_realm = yes }
+				ea_in_recall_grace = yes
+			}
+		}
+		# Grace path, or QoL pull-home when strip-on-leave is off
+		OR = {
+			has_game_rule = ea_rule_recall_grace_on
+			has_game_rule = ea_rule_strip_on_leave_off
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			custom_tooltip = {
+				text = ea_tt_is_your_exalted_advisor
+				ea_actor_is_patron_of_recipient = yes
+			}
+			custom_tooltip = {
+				text = ea_tt_not_abroad
+				OR = {
+					NOT = { ea_in_patron_realm = yes }
+					ea_in_recall_grace = yes
+				}
+			}
+			custom_tooltip = {
+				text = ea_tt_in_recall_grace
+				OR = {
+					ea_in_recall_grace = yes
+					has_game_rule = ea_rule_strip_on_leave_off
+					has_game_rule = ea_rule_recall_grace_on
+				}
+			}
+			ea_is_recallable = yes
+		}
+	}
+
+	# Prestige cost reserved (@ea_recall_prestige_cost = 0) — free in v0.2
+
+	on_accept = {
+		scope:recipient = {
+			ea_recall_exalted_advisor_effect = yes
+		}
+	}
+
+	ai_targets = {
+		ai_recipients = guests
+		chance = 0.35
+	}
+	ai_targets = {
+		ai_recipients = family
+		chance = 0.2
+	}
+	ai_targets = {
+		ai_recipients = scripted_relations
+		chance = 0.15
+	}
+	ai_frequency = 36
+
+	ai_potential = {
+		has_game_rule = ea_rule_granting_player_and_ai
+		OR = {
+			has_game_rule = ea_rule_recall_grace_on
+			has_game_rule = ea_rule_strip_on_leave_off
+		}
+	}
+
+	ai_will_do = {
+		base = 0
+		modifier = {
+			add = 200
+			scope:recipient = {
+				ea_in_recall_grace = yes
+			}
+		}
+		modifier = {
+			add = 50
+			scope:recipient = {
+				NOT = { ea_in_patron_realm = yes }
+			}
+		}
+	}
+}
+
+### CM-16 — Exalted Vassal
+ea_bestow_exalted_vassal_interaction = {
+	category = interaction_category_friendly
+	icon = vassal
+	interface_priority = 57
+	common_interaction = yes
+
+	desc = ea_bestow_exalted_vassal_interaction_desc
+
+	auto_accept = yes
+
+	is_shown = {
+		NOT = { has_game_rule = ea_rule_granting_disabled }
+		scope:actor = {
+			is_alive = yes
+			ea_actor_may_bestow_by_rule = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			NOT = { has_trait = ea_exalted_vassal }
+			ea_recipient_is_vassal_of_actor = yes
+		}
+		OR = {
+			AND = {
+				has_game_rule = ea_rule_self_grant_yes
+				scope:actor = scope:recipient
+			}
+			scope:actor != scope:recipient
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:actor = {
+			custom_tooltip = {
+				text = ea_tt_actor_may_bestow_ev
+				ea_can_actor_bestow_ev = yes
+			}
+		}
+		scope:recipient = {
+			custom_tooltip = {
+				text = ea_tt_can_receive_exalted_vassal
+				ea_can_receive_exalted_vassal = yes
+			}
+		}
+	}
+
+	on_accept = {
+		scope:actor = { save_scope_as = ea_patron }
+		scope:recipient = {
+			ea_bestow_exalted_vassal_effect = yes
+		}
+	}
+
+	ai_targets = {
+		ai_recipients = vassals
+		chance = 0.08
+	}
+	ai_target_quick_trigger = {
+		adult = yes
+	}
+	ai_frequency = 180
+
+	ai_potential = {
+		has_game_rule = ea_rule_granting_player_and_ai
+		ea_patron_under_ev_cap = yes
+	}
+
+	ai_will_do = {
+		base = 0
+		modifier = {
+			add = 20
+			scope:actor = {
+				opinion = {
+					target = scope:recipient
+					value >= 50
+				}
+			}
+		}
+		modifier = {
+			add = -100
+			AND = {
+				has_game_rule = ea_rule_mutual_exclusion_block_with_sovereign
+				scope:recipient = {
+					ea_character_is_supreme_sovereign = yes
+				}
+			}
+		}
+		modifier = {
+			add = -100
+			AND = {
+				has_game_rule = ea_rule_advisor_vassal_exclusion_block
+				scope:recipient = {
+					has_trait = ea_exalted_advisor
+				}
+			}
+		}
+	}
+}
+
+ea_revoke_exalted_vassal_interaction = {
+	category = interaction_category_hostile
+	icon = scroll_scales
+	interface_priority = 56
+	common_interaction = yes
+
+	desc = ea_revoke_exalted_vassal_interaction_desc
+
+	auto_accept = yes
+
+	is_shown = {
+		scope:actor = {
+			is_alive = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			has_trait = ea_exalted_vassal
+			exists = var:ea_ev_patron
+			var:ea_ev_patron = scope:actor
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			custom_tooltip = {
+				text = ea_tt_is_your_exalted_vassal
+				ea_actor_is_ev_patron_of_recipient = yes
+			}
+		}
+	}
+
+	on_accept = {
+		scope:actor = { save_scope_as = ea_patron }
+		scope:recipient = {
+			ea_revoke_exalted_vassal_effect = yes
+		}
+	}
+
+	ai_targets = {
+		ai_recipients = vassals
+		chance = 0.03
+	}
+	ai_frequency = 240
+
+	ai_potential = {
+		has_game_rule = ea_rule_granting_player_and_ai
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

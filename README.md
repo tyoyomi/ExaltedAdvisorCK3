@@ -1,0 +1,5 @@
+﻿# Exalted Advisor
+
+Crusader Kings III mod. Version 0.3.0. Supported game version 1.20.*.
+
+Canonical working copy: `Documents/Development/CK3 Mods/ea`.

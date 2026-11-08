@@ -1,0 +1,66 @@
+@ea_skill = 40
+@ea_health = 30
+@ea_negate_health = 15
+@ea_monthly_prestige = 5
+@ea_monthly_piety = 20
+@ea_monthly_income = 40
+@ea_general_opinion = 200
+@ea_attraction_opinion = 50
+@ea_scheme_stat = 75
+@ea_max_schemes = 3
+@ea_lifestyle_xp_mult = 3.5
+@ea_stress_gain_mult = -40
+@ea_advantage = 12
+@ea_knight_effectiveness = 0.5
+@ea_domain_limit = 1
+@ea_build_speed = -10
+@ea_court_grandeur = 10
+
+ea_exalted_advisor = {
+	category = fame
+	random_creation = 0
+	genetic = no
+	immortal = no
+	good = yes
+	shown_in_ruler_designer = yes
+
+	diplomacy = @ea_skill
+	martial = @ea_skill
+	stewardship = @ea_skill
+	intrigue = @ea_skill
+	learning = @ea_skill
+	prowess = @ea_skill
+	no_prowess_loss_from_age = yes
+
+	monthly_prestige = @ea_monthly_prestige
+	monthly_piety = @ea_monthly_piety
+	monthly_income = @ea_monthly_income
+
+	health = @ea_health
+	negate_health_penalty_add = @ea_negate_health
+
+	general_opinion = @ea_general_opinion
+	attraction_opinion = @ea_attraction_opinion
+
+	# Character-scoped scheme keys (bare scheme_power / scheme_resistance / scheme_secrecy are invalid)
+	owned_hostile_scheme_success_chance_add = @ea_scheme_stat
+	owned_personal_scheme_success_chance_add = @ea_scheme_stat
+	owned_scheme_secrecy_add = @ea_scheme_stat
+	enemy_hostile_scheme_success_chance_add = -75
+	enemy_hostile_scheme_phase_duration_add = @ea_scheme_stat
+	max_personal_schemes_add = @ea_max_schemes
+	max_hostile_schemes_add = @ea_max_schemes
+
+	monthly_lifestyle_xp_gain_mult = @ea_lifestyle_xp_mult
+	stress_gain_mult = @ea_stress_gain_mult
+
+	# Light commander / knight package only — no empire troop multipliers
+	advantage = @ea_advantage
+	knight_effectiveness_mult = @ea_knight_effectiveness
+
+	# Token landed-advisor convenience; not pocket-emperor tools
+	domain_limit = @ea_domain_limit
+	build_speed = @ea_build_speed
+
+	court_grandeur_baseline_add = @ea_court_grandeur
+}

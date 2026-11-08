@@ -1,0 +1,345 @@
+# Exalted Advisor — append-only vanilla hooks (never overwrite effect/trigger on vanilla roots)
+
+on_leave_court = {
+	on_actions = { ea_on_leave_court }
+}
+
+ea_on_leave_court = {
+	trigger = {
+		OR = {
+			has_trait = ea_exalted_advisor
+			has_trait = ea_exalted_vassal
+		}
+	}
+	effect = {
+		if = {
+			limit = { has_trait = ea_exalted_advisor }
+			ea_evaluate_strip_exalted_advisor_effect = yes
+		}
+		if = {
+			limit = { has_trait = ea_exalted_vassal }
+			ea_evaluate_strip_exalted_vassal_effect = yes
+		}
+	}
+}
+
+on_join_court = {
+	on_actions = { ea_on_join_court }
+}
+
+ea_on_join_court = {
+	trigger = {
+		OR = {
+			has_trait = ea_exalted_advisor
+			has_trait = ea_exalted_vassal
+			ea_auto_grant_includes_court_join = yes
+		}
+	}
+	effect = {
+		if = {
+			limit = { has_trait = ea_exalted_advisor }
+			ea_evaluate_strip_exalted_advisor_effect = yes
+			ea_sync_council_service_modifier_effect = yes
+		}
+		else_if = {
+			# Passive auto-grant on court join (silent; respects cap)
+			limit = {
+				ea_auto_grant_includes_court_join = yes
+				NOT = { has_trait = ea_exalted_advisor }
+			}
+			if = {
+				limit = {
+					exists = liege
+					liege = { is_alive = yes }
+				}
+				liege = { save_scope_as = ea_patron }
+			}
+			else_if = {
+				limit = {
+					exists = host
+					host = { is_alive = yes }
+				}
+				host = { save_scope_as = ea_patron }
+			}
+			if = {
+				limit = { exists = scope:ea_patron }
+				ea_try_auto_grant_exalted_advisor_effect = yes
+			}
+		}
+		if = {
+			limit = { has_trait = ea_exalted_vassal }
+			ea_evaluate_strip_exalted_vassal_effect = yes
+		}
+	}
+}
+
+on_title_lost = {
+	on_actions = { ea_on_title_lost }
+}
+
+ea_on_title_lost = {
+	trigger = {
+		OR = {
+			has_trait = ea_exalted_advisor
+			has_trait = ea_exalted_vassal
+			# Patron lost titles — re-check advisors / vassals bound to them
+			any_living_character = {
+				OR = {
+					AND = {
+						has_trait = ea_exalted_advisor
+						exists = var:ea_patron
+						var:ea_patron = root
+					}
+					AND = {
+						has_trait = ea_exalted_vassal
+						exists = var:ea_ev_patron
+						var:ea_ev_patron = root
+					}
+				}
+			}
+		}
+	}
+	effect = {
+		if = {
+			limit = { has_trait = ea_exalted_advisor }
+			ea_evaluate_strip_exalted_advisor_effect = yes
+		}
+		if = {
+			limit = { has_trait = ea_exalted_vassal }
+			ea_evaluate_strip_exalted_vassal_effect = yes
+		}
+		every_living_character = {
+			limit = {
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = root
+			}
+			ea_evaluate_strip_exalted_advisor_effect = yes
+		}
+		every_living_character = {
+			limit = {
+				has_trait = ea_exalted_vassal
+				exists = var:ea_ev_patron
+				var:ea_ev_patron = root
+			}
+			ea_evaluate_strip_exalted_vassal_effect = yes
+		}
+		# Patron title loss can change serving counts
+		if = {
+			limit = { is_alive = yes }
+			ea_refresh_court_aura_effect = yes
+		}
+	}
+}
+
+random_yearly_everyone_pulse = {
+	on_actions = { ea_yearly_realm_check }
+}
+
+ea_yearly_realm_check = {
+	trigger = {
+		OR = {
+			has_trait = ea_exalted_advisor
+			has_trait = ea_exalted_vassal
+		}
+	}
+	effect = {
+		if = {
+			limit = { has_trait = ea_exalted_advisor }
+			ea_evaluate_strip_exalted_advisor_effect = yes
+			ea_ai_try_recall_from_advisor_effect = yes
+			ea_sync_council_service_modifier_effect = yes
+			ea_refresh_patron_aura_from_advisor_effect = yes
+		}
+		if = {
+			limit = { has_trait = ea_exalted_vassal }
+			ea_evaluate_strip_exalted_vassal_effect = yes
+		}
+	}
+}
+
+# Quarterly safety net for playable characters (council sync + aura refresh + councillor auto-grant)
+quarterly_playable_pulse = {
+	on_actions = { ea_quarterly_council_aura_pulse }
+}
+
+ea_quarterly_council_aura_pulse = {
+	effect = {
+		if = {
+			limit = { has_trait = ea_exalted_advisor }
+			ea_evaluate_strip_exalted_advisor_effect = yes
+			ea_ai_try_recall_from_advisor_effect = yes
+			ea_sync_council_service_modifier_effect = yes
+		}
+		if = {
+			limit = { has_trait = ea_exalted_vassal }
+			ea_evaluate_strip_exalted_vassal_effect = yes
+		}
+		# Refresh aura if this playable is (or was) a patron
+		ea_refresh_court_aura_effect = yes
+		# Councillor auto-grant safety net (covers missed swap scopes)
+		if = {
+			limit = {
+				ea_auto_grant_includes_councillors = yes
+				ea_can_actor_bestow = yes
+			}
+			save_scope_as = ea_patron
+			every_councillor = {
+				limit = {
+					NOT = { has_trait = ea_exalted_advisor }
+				}
+				ea_try_auto_grant_exalted_advisor_effect = yes
+			}
+		}
+	}
+}
+
+### Council appointment hooks
+on_leave_council = {
+	on_actions = { ea_on_leave_council }
+}
+
+ea_on_leave_council = {
+	effect = {
+		if = {
+			limit = {
+				exists = scope:councillor
+				scope:councillor = { has_trait = ea_exalted_advisor }
+			}
+			scope:councillor = {
+				ea_sync_council_service_modifier_effect = yes
+			}
+		}
+		else_if = {
+			limit = { has_trait = ea_exalted_advisor }
+			ea_sync_council_service_modifier_effect = yes
+		}
+	}
+}
+
+on_fired_from_council = {
+	on_actions = { ea_on_fired_from_council }
+}
+
+ea_on_fired_from_council = {
+	effect = {
+		if = {
+			limit = {
+				exists = scope:councillor
+				scope:councillor = { has_trait = ea_exalted_advisor }
+			}
+			scope:councillor = {
+				ea_clear_council_service_modifiers_effect = yes
+			}
+		}
+	}
+}
+
+on_councillor_left = {
+	on_actions = { ea_on_councillor_left }
+}
+
+ea_on_councillor_left = {
+	effect = {
+		if = {
+			limit = {
+				exists = scope:councillor
+				scope:councillor = { has_trait = ea_exalted_advisor }
+			}
+			scope:councillor = {
+				ea_clear_council_service_modifiers_effect = yes
+			}
+		}
+		else_if = {
+			limit = { has_trait = ea_exalted_advisor }
+			ea_clear_council_service_modifiers_effect = yes
+		}
+	}
+}
+
+on_councillors_swapped = {
+	on_actions = { ea_on_councillors_swapped }
+}
+
+ea_on_councillors_swapped = {
+	effect = {
+		if = {
+			limit = { has_trait = ea_exalted_advisor }
+			ea_sync_council_service_modifier_effect = yes
+		}
+		if = {
+			limit = {
+				exists = scope:councillor
+				scope:councillor = { has_trait = ea_exalted_advisor }
+			}
+			scope:councillor = {
+				ea_sync_council_service_modifier_effect = yes
+			}
+		}
+		# Passive auto-grant when becoming councillor of the council owner
+		if = {
+			limit = { ea_auto_grant_includes_councillors = yes }
+			# Root is typically the liege/council owner on swap; also try scope:councillor's liege
+			if = {
+				limit = {
+					exists = scope:councillor
+					scope:councillor = { NOT = { has_trait = ea_exalted_advisor } }
+				}
+				save_scope_as = ea_patron
+				scope:councillor = {
+					ea_try_auto_grant_exalted_advisor_effect = yes
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_trait = ea_exalted_advisor }
+					exists = liege
+					liege = { is_alive = yes }
+					is_councillor_of = liege
+				}
+				liege = { save_scope_as = ea_patron }
+				ea_try_auto_grant_exalted_advisor_effect = yes
+			}
+		}
+	}
+}
+
+on_death = {
+	on_actions = { ea_on_death }
+}
+
+ea_on_death = {
+	effect = {
+		# Dying patron: rebind or strip advisors
+		if = {
+			limit = {
+				any_living_character = {
+					has_trait = ea_exalted_advisor
+					exists = var:ea_patron
+					var:ea_patron = root
+				}
+			}
+			ea_on_patron_death_effect = yes
+		}
+		# Dying EV patron: rebind or strip exalted vassals
+		if = {
+			limit = {
+				any_living_character = {
+					has_trait = ea_exalted_vassal
+					exists = var:ea_ev_patron
+					var:ea_ev_patron = root
+				}
+			}
+			ea_on_ev_patron_death_effect = yes
+		}
+		# Dying holder cleanup
+		if = {
+			limit = { has_trait = ea_exalted_advisor }
+			ea_on_holder_death_cleanup_effect = yes
+		}
+		if = {
+			limit = { has_trait = ea_exalted_vassal }
+			ea_on_ev_holder_death_cleanup_effect = yes
+		}
+	}
+}

@@ -1,0 +1,180 @@
+ea_rule_granting = {
+	categories = {
+		tweaks
+		ai
+	}
+
+	default = ea_rule_granting_player_only
+
+	ea_rule_granting_player_only = {
+	}
+
+	ea_rule_granting_player_and_ai = {
+		flag = blocks_achievements
+	}
+
+	ea_rule_granting_disabled = {
+	}
+}
+
+ea_rule_max_advisors = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_max_advisors_3
+
+	ea_rule_max_advisors_1 = {
+	}
+
+	ea_rule_max_advisors_3 = {
+	}
+
+	ea_rule_max_advisors_5 = {
+	}
+
+	ea_rule_max_advisors_unlimited = {
+		flag = blocks_achievements
+	}
+}
+
+ea_rule_strip_on_leave = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_strip_on_leave_on
+
+	ea_rule_strip_on_leave_on = {
+	}
+
+	ea_rule_strip_on_leave_off = {
+	}
+}
+
+ea_rule_mutual_exclusion = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_mutual_exclusion_block_with_sovereign
+
+	ea_rule_mutual_exclusion_block_with_sovereign = {
+	}
+
+	ea_rule_mutual_exclusion_allow_both = {
+	}
+}
+
+ea_rule_self_grant = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_self_grant_no
+
+	ea_rule_self_grant_no = {
+	}
+
+	ea_rule_self_grant_yes = {
+	}
+}
+
+ea_rule_court_aura = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_court_aura_on
+
+	ea_rule_court_aura_on = {
+	}
+
+	ea_rule_court_aura_off = {
+	}
+}
+
+ea_rule_recall_grace = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_recall_grace_on
+
+	ea_rule_recall_grace_on = {
+	}
+
+	ea_rule_recall_grace_off = {
+	}
+}
+
+### CM-15 — advisor automation
+ea_rule_auto_grant = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_auto_grant_off
+
+	ea_rule_auto_grant_off = {
+	}
+
+	ea_rule_auto_grant_court_join = {
+	}
+
+	ea_rule_auto_grant_councillors = {
+	}
+
+	ea_rule_auto_grant_court_and_councillors = {
+	}
+}
+
+ea_rule_auto_strip_decisions = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_auto_strip_decisions_on
+
+	ea_rule_auto_strip_decisions_on = {
+	}
+
+	ea_rule_auto_strip_decisions_off = {
+	}
+}
+
+### CM-16 — exalted vassal
+ea_rule_max_exalted_vassals = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_max_exalted_vassals_5
+
+	ea_rule_max_exalted_vassals_1 = {
+	}
+
+	ea_rule_max_exalted_vassals_3 = {
+	}
+
+	ea_rule_max_exalted_vassals_5 = {
+	}
+
+	ea_rule_max_exalted_vassals_unlimited = {
+		flag = blocks_achievements
+	}
+}
+
+ea_rule_advisor_vassal_exclusion = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_advisor_vassal_exclusion_block
+
+	ea_rule_advisor_vassal_exclusion_block = {
+	}
+
+	ea_rule_advisor_vassal_exclusion_allow_both = {
+	}
+}

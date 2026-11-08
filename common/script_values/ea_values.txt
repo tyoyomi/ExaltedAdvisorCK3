@@ -1,0 +1,126 @@
+# Exalted Advisor — tunable script values
+
+@ea_skill = 40
+@ea_health = 30
+@ea_negate_health = 15
+@ea_monthly_prestige = 5
+@ea_monthly_piety = 20
+@ea_monthly_income = 40
+@ea_general_opinion = 200
+@ea_attraction_opinion = 50
+@ea_scheme_stat = 75
+@ea_max_schemes = 3
+@ea_lifestyle_xp_mult = 3.5
+@ea_stress_gain_mult = -40
+@ea_advantage = 12
+@ea_knight_effectiveness = 0.5
+@ea_domain_limit = 1
+@ea_build_speed = -10
+@ea_court_grandeur_contribution = 10
+
+# v0.2 council / aura / recall tunables (documentation + script use)
+@ea_council_seat_skill = 10
+@ea_council_lifestyle_xp = 0.5
+@ea_council_monthly_prestige = 2
+@ea_council_scheme_resistance = 15
+@ea_recall_grace_years = 1
+@ea_recall_prestige_cost = 0
+
+# v0.3 exalted vassal tunables (documentation; trait file has matching @ea_ev_*)
+@ea_ev_skill = 35
+@ea_ev_health = 25
+@ea_ev_negate_health = 12
+@ea_ev_monthly_prestige = 8
+@ea_ev_monthly_piety = 15
+@ea_ev_monthly_income = 50
+@ea_ev_general_opinion = 120
+@ea_ev_vassal_opinion = 80
+@ea_ev_fellow_vassal_opinion = 80
+@ea_ev_scheme_stat = 38
+@ea_ev_max_schemes = 2
+@ea_ev_lifestyle_xp_mult = 2.5
+@ea_ev_stress_gain_mult = -30
+@ea_ev_advantage = 15
+@ea_ev_knight_effectiveness = 0.75
+@ea_ev_domain_limit = 2
+@ea_ev_build_speed = -20
+@ea_ev_court_grandeur = 5
+
+ea_max_advisors_value = {
+	value = 3
+	if = {
+		limit = { has_game_rule = ea_rule_max_advisors_1 }
+		value = 1
+	}
+	else_if = {
+		limit = { has_game_rule = ea_rule_max_advisors_3 }
+		value = 3
+	}
+	else_if = {
+		limit = { has_game_rule = ea_rule_max_advisors_5 }
+		value = 5
+	}
+	else_if = {
+		limit = { has_game_rule = ea_rule_max_advisors_unlimited }
+		value = 9999
+	}
+}
+
+ea_max_exalted_vassals_value = {
+	value = 5
+	if = {
+		limit = { has_game_rule = ea_rule_max_exalted_vassals_1 }
+		value = 1
+	}
+	else_if = {
+		limit = { has_game_rule = ea_rule_max_exalted_vassals_3 }
+		value = 3
+	}
+	else_if = {
+		limit = { has_game_rule = ea_rule_max_exalted_vassals_5 }
+		value = 5
+	}
+	else_if = {
+		limit = { has_game_rule = ea_rule_max_exalted_vassals_unlimited }
+		value = 9999
+	}
+}
+
+ea_exalted_advisor_count_for_patron_value = {
+	value = 0
+	every_living_character = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = root
+		}
+		add = 1
+	}
+}
+
+ea_exalted_vassal_count_for_patron_value = {
+	value = 0
+	every_living_character = {
+		limit = {
+			has_trait = ea_exalted_vassal
+			exists = var:ea_ev_patron
+			var:ea_ev_patron = root
+		}
+		add = 1
+	}
+}
+
+# In-realm serving advisors only (abroad / pending-grace do not count toward aura)
+ea_serving_advisor_count_for_patron_value = {
+	value = 0
+	every_living_character = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = root
+			ea_in_patron_realm = yes
+			NOT = { ea_in_recall_grace = yes }
+		}
+		add = 1
+	}
+}

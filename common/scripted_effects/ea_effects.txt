@@ -1,0 +1,915 @@
+# Exalted Advisor — scripted effects
+# Bestow/revoke expect this = recipient and scope:ea_patron = granter (or actor for revoke notify).
+
+@ea_recall_grace_years = 1
+
+### Council service modifiers
+ea_clear_council_service_modifiers_effect = {
+	remove_character_modifier = ea_council_service_modifier
+	remove_character_modifier = ea_council_chancellor_modifier
+	remove_character_modifier = ea_council_marshal_modifier
+	remove_character_modifier = ea_council_steward_modifier
+	remove_character_modifier = ea_council_spymaster_modifier
+	remove_character_modifier = ea_council_chaplain_modifier
+	remove_character_modifier = ea_council_spouse_modifier
+}
+
+ea_sync_council_service_modifier_effect = {
+	ea_clear_council_service_modifiers_effect = yes
+	if = {
+		limit = { ea_is_councillor_for_patron = yes }
+		add_character_modifier = {
+			modifier = ea_council_service_modifier
+		}
+		if = {
+			limit = { has_council_position = councillor_chancellor }
+			add_character_modifier = { modifier = ea_council_chancellor_modifier }
+		}
+		else_if = {
+			limit = { has_council_position = councillor_marshal }
+			add_character_modifier = { modifier = ea_council_marshal_modifier }
+		}
+		else_if = {
+			limit = { has_council_position = councillor_steward }
+			add_character_modifier = { modifier = ea_council_steward_modifier }
+		}
+		else_if = {
+			limit = { has_council_position = councillor_spymaster }
+			add_character_modifier = { modifier = ea_council_spymaster_modifier }
+		}
+		else_if = {
+			limit = { has_council_position = councillor_court_chaplain }
+			add_character_modifier = { modifier = ea_council_chaplain_modifier }
+		}
+		else_if = {
+			limit = { has_council_position = councillor_spouse }
+			add_character_modifier = { modifier = ea_council_spouse_modifier }
+		}
+	}
+}
+
+### Court aura (on patron)
+ea_clear_court_aura_effect = {
+	remove_character_modifier = ea_court_aura_1_modifier
+	remove_character_modifier = ea_court_aura_2_modifier
+	remove_character_modifier = ea_court_aura_3_modifier
+}
+
+ea_refresh_court_aura_effect = {
+	# this = patron
+	ea_clear_court_aura_effect = yes
+	if = {
+		limit = {
+			is_alive = yes
+			has_game_rule = ea_rule_court_aura_on
+			ea_serving_advisor_count_for_patron_value >= 1
+		}
+		if = {
+			limit = { ea_serving_advisor_count_for_patron_value >= 3 }
+			add_character_modifier = { modifier = ea_court_aura_3_modifier }
+		}
+		else_if = {
+			limit = { ea_serving_advisor_count_for_patron_value >= 2 }
+			add_character_modifier = { modifier = ea_court_aura_2_modifier }
+		}
+		else = {
+			add_character_modifier = { modifier = ea_court_aura_1_modifier }
+		}
+	}
+}
+
+ea_refresh_patron_aura_from_advisor_effect = {
+	# this = advisor
+	if = {
+		limit = {
+			exists = var:ea_patron
+			var:ea_patron = { is_alive = yes }
+		}
+		var:ea_patron = {
+			ea_refresh_court_aura_effect = yes
+		}
+	}
+}
+
+### Recall grace
+ea_clear_recall_grace_effect = {
+	remove_character_flag = ea_pending_strip
+	remove_variable = ea_recall_grace_ends
+	remove_character_flag = ea_strip_after_grace
+}
+
+ea_enter_recall_grace_effect = {
+	if = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			NOT = { ea_in_recall_grace = yes }
+		}
+		add_character_flag = ea_pending_strip
+		set_variable = {
+			name = ea_recall_grace_ends
+			years = @ea_recall_grace_years
+		}
+		save_scope_as = ea_grace_advisor
+		if = {
+			limit = {
+				exists = var:ea_patron
+				var:ea_patron = { is_alive = yes is_ai = no }
+			}
+			var:ea_patron = {
+				trigger_event = ea_events.1401
+			}
+		}
+		if = {
+			limit = { is_ai = no }
+			trigger_event = ea_events.1402
+		}
+		# Abroad / pending-grace advisors do not count as serving
+		ea_refresh_patron_aura_from_advisor_effect = yes
+		ea_clear_council_service_modifiers_effect = yes
+	}
+}
+
+# AI patrons with granting=player_and_ai auto-pull advisors still in grace (interaction targeting often misses abroad)
+ea_ai_try_recall_from_advisor_effect = {
+	if = {
+		limit = {
+			ea_in_recall_grace = yes
+			has_game_rule = ea_rule_granting_player_and_ai
+			exists = var:ea_patron
+			var:ea_patron = {
+				is_alive = yes
+				is_ai = yes
+			}
+		}
+		var:ea_patron = { save_scope_as = actor }
+		if = {
+			limit = { ea_is_recallable = yes }
+			ea_recall_exalted_advisor_effect = yes
+		}
+	}
+}
+
+ea_recall_exalted_advisor_effect = {
+	# this = advisor; prefer scope:actor (interaction), else var:ea_patron
+	if = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			is_alive = yes
+		}
+		save_scope_as = ea_recalled_advisor
+		if = {
+			limit = { exists = scope:actor }
+			scope:actor = { save_scope_as = ea_recall_host }
+		}
+		else_if = {
+			limit = {
+				exists = var:ea_patron
+				var:ea_patron = { is_alive = yes }
+			}
+			var:ea_patron = { save_scope_as = ea_recall_host }
+		}
+		if = {
+			limit = { exists = scope:ea_recall_host }
+			# Notify old host/liege when pulling from another court
+			if = {
+				limit = {
+					exists = liege
+					liege != scope:ea_recall_host
+				}
+				liege = {
+					send_interface_message = {
+						type = event_generic_neutral
+						title = msg_courtier_left_court_interaction_title
+						right_icon = scope:ea_recalled_advisor
+						show_as_tooltip = {
+							remove_courtier_or_guest = scope:ea_recalled_advisor
+						}
+					}
+				}
+			}
+			scope:ea_recall_host = {
+				add_courtier = scope:ea_recalled_advisor
+			}
+			hidden_effect = {
+				return_to_court = yes
+			}
+			ea_clear_recall_grace_effect = yes
+			ea_sync_council_service_modifier_effect = yes
+			ea_refresh_patron_aura_from_advisor_effect = yes
+			if = {
+				limit = {
+					exists = scope:ea_recall_host
+					scope:ea_recall_host = { is_alive = yes is_ai = no }
+				}
+				scope:ea_recall_host = {
+					trigger_event = ea_events.1403
+				}
+			}
+		}
+	}
+}
+
+# Realm-lapse strip — different flavor events from manual revoke
+ea_strip_exalted_advisor_effect = {
+	if = {
+		limit = { has_trait = ea_exalted_advisor }
+		if = {
+			limit = {
+				exists = var:ea_patron
+				var:ea_patron = { is_alive = yes }
+			}
+			var:ea_patron = {
+				save_scope_as = ea_notify_patron
+			}
+		}
+		save_scope_as = ea_former_advisor
+		ea_clear_council_service_modifiers_effect = yes
+		# Patron notify: grace-ended uses 1404; other strips use 1201
+		if = {
+			limit = {
+				exists = scope:ea_notify_patron
+				scope:ea_notify_patron = { is_ai = no }
+			}
+			if = {
+				limit = { has_character_flag = ea_strip_after_grace }
+				scope:ea_notify_patron = {
+					trigger_event = ea_events.1404
+				}
+			}
+			else = {
+				scope:ea_notify_patron = {
+					trigger_event = ea_events.1201
+				}
+			}
+		}
+		if = {
+			limit = { is_ai = no }
+			trigger_event = ea_events.1202
+		}
+		ea_clear_recall_grace_effect = yes
+		remove_trait = ea_exalted_advisor
+		# Refresh aura on former patron before clearing binding
+		if = {
+			limit = { exists = scope:ea_notify_patron }
+			scope:ea_notify_patron = {
+				ea_refresh_court_aura_effect = yes
+			}
+		}
+		remove_variable = ea_patron
+		remove_character_flag = ea_is_exalted
+		remove_character_flag = ea_strip_after_grace
+	}
+}
+
+ea_evaluate_strip_exalted_advisor_effect = {
+	# Sovereign outranks EA when exclusion is on — immediate, no grace
+	if = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			has_game_rule = ea_rule_mutual_exclusion_block_with_sovereign
+			ea_character_is_supreme_sovereign = yes
+		}
+		ea_clear_recall_grace_effect = yes
+		ea_strip_exalted_advisor_effect = yes
+	}
+	# EA/EV mutual exclusion — prefer EV; strip EA when both present under block
+	else_if = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			has_trait = ea_exalted_vassal
+			has_game_rule = ea_rule_advisor_vassal_exclusion_block
+		}
+		ea_clear_recall_grace_effect = yes
+		ea_revoke_exalted_advisor_silent_effect = yes
+	}
+	# Returned to realm during grace → clear grace and resync
+	else_if = {
+		limit = {
+			ea_in_recall_grace = yes
+			ea_in_patron_realm = yes
+		}
+		ea_clear_recall_grace_effect = yes
+		ea_sync_council_service_modifier_effect = yes
+		ea_refresh_patron_aura_from_advisor_effect = yes
+	}
+	# Grace expired and still abroad → strip (grace-ended flavor)
+	else_if = {
+		limit = { ea_should_finalize_strip_after_grace = yes }
+		add_character_flag = ea_strip_after_grace
+		ea_strip_exalted_advisor_effect = yes
+	}
+	# Enter grace instead of immediate strip
+	else_if = {
+		limit = { ea_should_enter_recall_grace = yes }
+		ea_enter_recall_grace_effect = yes
+	}
+	# Grace rule off (or strip still warranted without grace path) → immediate strip
+	else_if = {
+		limit = { ea_should_strip_exalted_advisor = yes }
+		ea_strip_exalted_advisor_effect = yes
+	}
+}
+
+### Shared apply / clear (loud vs silent wrappers only differ on notify)
+ea_apply_exalted_advisor_status_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			NOT = { has_trait = ea_exalted_advisor }
+		}
+		save_scope_as = ea_new_advisor
+		add_trait = ea_exalted_advisor
+		if = {
+			limit = { exists = scope:ea_patron }
+			set_variable = {
+				name = ea_patron
+				value = scope:ea_patron
+			}
+		}
+		else_if = {
+			limit = { exists = scope:actor }
+			set_variable = {
+				name = ea_patron
+				value = scope:actor
+			}
+			scope:actor = { save_scope_as = ea_patron }
+		}
+		add_character_flag = ea_is_exalted
+		ea_sync_council_service_modifier_effect = yes
+		ea_refresh_patron_aura_from_advisor_effect = yes
+	}
+}
+
+ea_clear_exalted_advisor_status_effect = {
+	if = {
+		limit = { has_trait = ea_exalted_advisor }
+		if = {
+			limit = {
+				exists = var:ea_patron
+				var:ea_patron = { is_alive = yes }
+			}
+			var:ea_patron = {
+				save_scope_as = ea_notify_patron
+			}
+		}
+		save_scope_as = ea_former_advisor
+		ea_clear_council_service_modifiers_effect = yes
+		ea_clear_recall_grace_effect = yes
+		remove_trait = ea_exalted_advisor
+		if = {
+			limit = { exists = scope:ea_notify_patron }
+			scope:ea_notify_patron = {
+				ea_refresh_court_aura_effect = yes
+			}
+		}
+		remove_variable = ea_patron
+		remove_character_flag = ea_is_exalted
+	}
+}
+
+ea_bestow_exalted_advisor_silent_effect = {
+	ea_apply_exalted_advisor_status_effect = yes
+}
+
+ea_bestow_exalted_advisor_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			NOT = { has_trait = ea_exalted_advisor }
+		}
+		ea_apply_exalted_advisor_status_effect = yes
+		# Notify granter
+		if = {
+			limit = {
+				exists = var:ea_patron
+				var:ea_patron = { is_alive = yes is_ai = no }
+			}
+			var:ea_patron = {
+				trigger_event = ea_events.1001
+			}
+		}
+		# Notify recipient (if player and not same as patron)
+		if = {
+			limit = {
+				is_ai = no
+				trigger_if = {
+					limit = { exists = var:ea_patron }
+					this != var:ea_patron
+				}
+			}
+			trigger_event = ea_events.1002
+		}
+	}
+}
+
+ea_revoke_exalted_advisor_silent_effect = {
+	ea_clear_exalted_advisor_status_effect = yes
+}
+
+ea_revoke_exalted_advisor_effect = {
+	if = {
+		limit = { has_trait = ea_exalted_advisor }
+		if = {
+			limit = {
+				exists = var:ea_patron
+				var:ea_patron = { is_alive = yes }
+			}
+			var:ea_patron = {
+				save_scope_as = ea_notify_patron
+			}
+		}
+		save_scope_as = ea_former_advisor
+		if = {
+			limit = {
+				exists = scope:ea_notify_patron
+				scope:ea_notify_patron = { is_ai = no }
+			}
+			scope:ea_notify_patron = {
+				trigger_event = ea_events.1101
+			}
+		}
+		ea_clear_exalted_advisor_status_effect = yes
+	}
+}
+
+### CM-15 — auto-grant / bulk assign / strip
+# this = candidate; scope:ea_patron = granter. Caller must already match auto-grant source rule.
+ea_try_auto_grant_exalted_advisor_effect = {
+	if = {
+		limit = {
+			exists = scope:ea_patron
+			scope:ea_patron = {
+				is_alive = yes
+				ea_can_actor_bestow = yes
+			}
+			ea_can_receive_exalted_advisor = yes
+		}
+		ea_bestow_exalted_advisor_silent_effect = yes
+	}
+}
+
+# this = patron. Elevates councillors → consorts → other courtiers/guests until cap.
+ea_auto_assign_exalted_advisors_for_patron_effect = {
+	save_scope_as = ea_patron
+	set_variable = {
+		name = ea_auto_assign_count
+		value = 0
+	}
+	set_variable = {
+		name = ea_auto_assign_skipped_cap
+		value = 0
+	}
+
+	# 1) Councillors first
+	every_councillor = {
+		limit = {
+			ea_eligible_for_auto_assign_pool = yes
+		}
+		if = {
+			limit = {
+				scope:ea_patron = { ea_patron_under_advisor_cap = yes }
+			}
+			ea_bestow_exalted_advisor_silent_effect = yes
+			scope:ea_patron = {
+				change_variable = {
+					name = ea_auto_assign_count
+					add = 1
+				}
+			}
+		}
+		else = {
+			scope:ea_patron = {
+				change_variable = {
+					name = ea_auto_assign_skipped_cap
+					add = 1
+				}
+			}
+		}
+	}
+
+	# 2) Consorts next
+	every_consort = {
+		limit = {
+			ea_eligible_for_auto_assign_pool = yes
+		}
+		if = {
+			limit = {
+				scope:ea_patron = { ea_patron_under_advisor_cap = yes }
+			}
+			ea_bestow_exalted_advisor_silent_effect = yes
+			scope:ea_patron = {
+				change_variable = {
+					name = ea_auto_assign_count
+					add = 1
+				}
+			}
+		}
+		else = {
+			scope:ea_patron = {
+				change_variable = {
+					name = ea_auto_assign_skipped_cap
+					add = 1
+				}
+			}
+		}
+	}
+
+	# 3) Remaining courtiers/guests by diplomacy (deterministic via ordered_in_list)
+	every_courtier_or_guest = {
+		limit = {
+			ea_eligible_for_auto_assign_pool = yes
+		}
+		add_to_temporary_list = ea_auto_court_pool
+	}
+	ordered_in_list = {
+		list = ea_auto_court_pool
+		order_by = diplomacy
+		descending = yes
+		if = {
+			limit = {
+				scope:ea_patron = { ea_patron_under_advisor_cap = yes }
+			}
+			ea_bestow_exalted_advisor_silent_effect = yes
+			scope:ea_patron = {
+				change_variable = {
+					name = ea_auto_assign_count
+					add = 1
+				}
+			}
+		}
+		else = {
+			scope:ea_patron = {
+				change_variable = {
+					name = ea_auto_assign_skipped_cap
+					add = 1
+				}
+			}
+		}
+	}
+}
+
+ea_auto_strip_all_exalted_advisors_for_patron_effect = {
+	# this = patron
+	save_scope_as = ea_patron
+	set_variable = {
+		name = ea_auto_strip_count
+		value = 0
+	}
+	every_living_character = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:ea_patron
+		}
+		ea_revoke_exalted_advisor_silent_effect = yes
+		scope:ea_patron = {
+			change_variable = {
+				name = ea_auto_strip_count
+				add = 1
+			}
+		}
+	}
+}
+
+ea_auto_strip_unworthy_exalted_advisors_for_patron_effect = {
+	# this = patron — evaluate_strip only (respects grace / in-realm)
+	save_scope_as = ea_patron
+	set_variable = {
+		name = ea_auto_strip_count
+		value = 0
+	}
+	every_living_character = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:ea_patron
+		}
+		# Snapshot trait presence; evaluate may strip
+		if = {
+			limit = { has_trait = ea_exalted_advisor }
+			ea_evaluate_strip_exalted_advisor_effect = yes
+			if = {
+				limit = { NOT = { has_trait = ea_exalted_advisor } }
+				scope:ea_patron = {
+					change_variable = {
+						name = ea_auto_strip_count
+						add = 1
+					}
+				}
+			}
+		}
+	}
+}
+
+# Patron died: rebind to player_heir / primary_heir when realm continuity holds; else strip
+ea_on_patron_death_effect = {
+	# this = dying patron
+	save_scope_as = ea_dying_patron
+	if = {
+		limit = {
+			exists = player_heir
+			player_heir = { is_alive = yes }
+		}
+		player_heir = { save_scope_as = ea_heir_patron }
+	}
+	else_if = {
+		limit = {
+			exists = primary_heir
+			primary_heir = { is_alive = yes }
+		}
+		primary_heir = { save_scope_as = ea_heir_patron }
+	}
+	every_living_character = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:ea_dying_patron
+		}
+		if = {
+			limit = {
+				exists = scope:ea_heir_patron
+			}
+			# Temporarily point patron at heir to test realm membership
+			set_variable = {
+				name = ea_patron
+				value = scope:ea_heir_patron
+			}
+			if = {
+				limit = { ea_in_patron_realm = yes }
+				# Keep rebound patron; clear any grace under old bond
+				ea_clear_recall_grace_effect = yes
+				ea_sync_council_service_modifier_effect = yes
+			}
+			else = {
+				# Prefer strip if not in new patron realm (incl. abroad-during-grace)
+				set_variable = {
+					name = ea_patron
+					value = scope:ea_dying_patron
+				}
+				ea_clear_recall_grace_effect = yes
+				ea_strip_exalted_advisor_effect = yes
+			}
+		}
+		else = {
+			ea_clear_recall_grace_effect = yes
+			ea_strip_exalted_advisor_effect = yes
+		}
+	}
+	# Aura on dying patron clears with death; refresh heir if rebound occurred
+	if = {
+		limit = {
+			exists = scope:ea_heir_patron
+			scope:ea_heir_patron = { is_alive = yes }
+		}
+		scope:ea_heir_patron = {
+			ea_refresh_court_aura_effect = yes
+		}
+	}
+	ea_clear_court_aura_effect = yes
+}
+
+ea_on_holder_death_cleanup_effect = {
+	if = {
+		limit = { has_trait = ea_exalted_advisor }
+		if = {
+			limit = {
+				exists = var:ea_patron
+				var:ea_patron = { is_alive = yes }
+			}
+			var:ea_patron = { save_scope_as = ea_notify_patron }
+		}
+		ea_clear_council_service_modifiers_effect = yes
+		ea_clear_recall_grace_effect = yes
+		remove_variable = ea_patron
+		remove_character_flag = ea_is_exalted
+		# Trait dies with character; refresh former patron aura
+		if = {
+			limit = { exists = scope:ea_notify_patron }
+			scope:ea_notify_patron = {
+				ea_refresh_court_aura_effect = yes
+			}
+		}
+	}
+}
+
+### CM-16 — Exalted Vassal apply / clear / strip
+ea_apply_exalted_vassal_status_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			NOT = { has_trait = ea_exalted_vassal }
+		}
+		save_scope_as = ea_new_vassal
+		add_trait = ea_exalted_vassal
+		if = {
+			limit = { exists = scope:ea_patron }
+			set_variable = {
+				name = ea_ev_patron
+				value = scope:ea_patron
+			}
+		}
+		else_if = {
+			limit = { exists = scope:actor }
+			set_variable = {
+				name = ea_ev_patron
+				value = scope:actor
+			}
+			scope:actor = { save_scope_as = ea_patron }
+		}
+		add_character_flag = ea_is_exalted_vassal
+	}
+}
+
+ea_clear_exalted_vassal_status_effect = {
+	if = {
+		limit = { has_trait = ea_exalted_vassal }
+		if = {
+			limit = {
+				exists = var:ea_ev_patron
+				var:ea_ev_patron = { is_alive = yes }
+			}
+			var:ea_ev_patron = {
+				save_scope_as = ea_notify_patron
+			}
+		}
+		save_scope_as = ea_former_vassal
+		remove_trait = ea_exalted_vassal
+		remove_variable = ea_ev_patron
+		remove_character_flag = ea_is_exalted_vassal
+	}
+}
+
+ea_bestow_exalted_vassal_silent_effect = {
+	ea_apply_exalted_vassal_status_effect = yes
+}
+
+ea_bestow_exalted_vassal_effect = {
+	if = {
+		limit = {
+			is_alive = yes
+			NOT = { has_trait = ea_exalted_vassal }
+		}
+		ea_apply_exalted_vassal_status_effect = yes
+		if = {
+			limit = {
+				exists = var:ea_ev_patron
+				var:ea_ev_patron = { is_alive = yes is_ai = no }
+			}
+			var:ea_ev_patron = {
+				trigger_event = ea_events.1601
+			}
+		}
+		if = {
+			limit = {
+				is_ai = no
+				trigger_if = {
+					limit = { exists = var:ea_ev_patron }
+					this != var:ea_ev_patron
+				}
+			}
+			trigger_event = ea_events.1602
+		}
+	}
+}
+
+ea_revoke_exalted_vassal_silent_effect = {
+	ea_clear_exalted_vassal_status_effect = yes
+}
+
+ea_revoke_exalted_vassal_effect = {
+	if = {
+		limit = { has_trait = ea_exalted_vassal }
+		if = {
+			limit = {
+				exists = var:ea_ev_patron
+				var:ea_ev_patron = { is_alive = yes }
+			}
+			var:ea_ev_patron = {
+				save_scope_as = ea_notify_patron
+			}
+		}
+		save_scope_as = ea_former_vassal
+		if = {
+			limit = {
+				exists = scope:ea_notify_patron
+				scope:ea_notify_patron = { is_ai = no }
+			}
+			scope:ea_notify_patron = {
+				trigger_event = ea_events.1611
+			}
+		}
+		ea_clear_exalted_vassal_status_effect = yes
+	}
+}
+
+ea_strip_exalted_vassal_effect = {
+	if = {
+		limit = { has_trait = ea_exalted_vassal }
+		if = {
+			limit = {
+				exists = var:ea_ev_patron
+				var:ea_ev_patron = { is_alive = yes }
+			}
+			var:ea_ev_patron = {
+				save_scope_as = ea_notify_patron
+			}
+		}
+		save_scope_as = ea_former_vassal
+		if = {
+			limit = {
+				exists = scope:ea_notify_patron
+				scope:ea_notify_patron = { is_ai = no }
+			}
+			scope:ea_notify_patron = {
+				trigger_event = ea_events.1621
+			}
+		}
+		if = {
+			limit = { is_ai = no }
+			trigger_event = ea_events.1622
+		}
+		remove_trait = ea_exalted_vassal
+		remove_variable = ea_ev_patron
+		remove_character_flag = ea_is_exalted_vassal
+	}
+}
+
+# No recall grace for EV — independence / leave-realm strips on evaluate
+ea_evaluate_strip_exalted_vassal_effect = {
+	if = {
+		limit = {
+			has_trait = ea_exalted_vassal
+			has_game_rule = ea_rule_mutual_exclusion_block_with_sovereign
+			ea_character_is_supreme_sovereign = yes
+		}
+		ea_strip_exalted_vassal_effect = yes
+	}
+	else_if = {
+		limit = {
+			has_trait = ea_exalted_vassal
+			has_trait = ea_exalted_advisor
+			has_game_rule = ea_rule_advisor_vassal_exclusion_block
+		}
+		# Prefer EV: strip EA silently
+		ea_revoke_exalted_advisor_silent_effect = yes
+	}
+	else_if = {
+		limit = { ea_should_strip_exalted_vassal = yes }
+		ea_strip_exalted_vassal_effect = yes
+	}
+}
+
+ea_on_ev_patron_death_effect = {
+	# this = dying EV patron
+	save_scope_as = ea_dying_patron
+	if = {
+		limit = {
+			exists = player_heir
+			player_heir = { is_alive = yes }
+		}
+		player_heir = { save_scope_as = ea_heir_patron }
+	}
+	else_if = {
+		limit = {
+			exists = primary_heir
+			primary_heir = { is_alive = yes }
+		}
+		primary_heir = { save_scope_as = ea_heir_patron }
+	}
+	every_living_character = {
+		limit = {
+			has_trait = ea_exalted_vassal
+			exists = var:ea_ev_patron
+			var:ea_ev_patron = scope:ea_dying_patron
+		}
+		if = {
+			limit = { exists = scope:ea_heir_patron }
+			set_variable = {
+				name = ea_ev_patron
+				value = scope:ea_heir_patron
+			}
+			if = {
+				limit = { ea_in_ev_patron_realm = yes }
+				# keep rebound
+			}
+			else = {
+				set_variable = {
+					name = ea_ev_patron
+					value = scope:ea_dying_patron
+				}
+				ea_strip_exalted_vassal_effect = yes
+			}
+		}
+		else = {
+			ea_strip_exalted_vassal_effect = yes
+		}
+	}
+}
+
+ea_on_ev_holder_death_cleanup_effect = {
+	if = {
+		limit = { has_trait = ea_exalted_vassal }
+		remove_variable = ea_ev_patron
+		remove_character_flag = ea_is_exalted_vassal
+	}
+}

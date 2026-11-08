@@ -1,0 +1,104 @@
+# Exalted Advisor — temporary council service + court aura modifiers
+# Tunables mirrored in script_values for documentation; applied as literals here (@ works at file top).
+
+@ea_council_lifestyle_xp = 0.5
+@ea_council_monthly_prestige = 2
+@ea_council_stress_gain = -0.1
+@ea_council_scheme_resistance = 15
+@ea_council_seat_skill = 10
+@ea_council_fellow_vassal_opinion = 10
+@ea_council_advantage = 5
+@ea_council_build_speed = -5
+@ea_council_scheme_power = 15
+@ea_council_chaplain_piety = 5
+@ea_council_spouse_skill = 5
+
+@ea_aura_1_prestige = 3
+@ea_aura_1_grandeur = 5
+@ea_aura_1_stress_loss = 0.1
+@ea_aura_1_diplomacy = 2
+
+@ea_aura_2_prestige = 5
+@ea_aura_2_grandeur = 8
+@ea_aura_2_stress_loss = 0.15
+@ea_aura_2_skill = 3
+
+@ea_aura_3_prestige = 8
+@ea_aura_3_grandeur = 12
+@ea_aura_3_stress_loss = 0.2
+@ea_aura_3_skill = 4
+@ea_aura_3_prestige_mult = 0.05
+
+### Council service — base (any patron council seat)
+ea_council_service_modifier = {
+	monthly_lifestyle_xp_gain_mult = @ea_council_lifestyle_xp
+	monthly_prestige = @ea_council_monthly_prestige
+	stress_gain_mult = @ea_council_stress_gain
+	# Valid character-modifier stand-in for "scheme resistance"
+	enemy_hostile_scheme_success_chance_add = -15
+	enemy_hostile_scheme_phase_duration_add = @ea_council_scheme_resistance
+}
+
+### Seat overlays (mutually exclusive; applied with base)
+ea_council_chancellor_modifier = {
+	diplomacy = @ea_council_seat_skill
+	fellow_vassal_opinion = @ea_council_fellow_vassal_opinion
+}
+
+ea_council_marshal_modifier = {
+	martial = @ea_council_seat_skill
+	advantage = @ea_council_advantage
+}
+
+ea_council_steward_modifier = {
+	stewardship = @ea_council_seat_skill
+	build_speed = @ea_council_build_speed
+}
+
+ea_council_spymaster_modifier = {
+	intrigue = @ea_council_seat_skill
+	# Valid character-modifier stand-in for "scheme power"
+	owned_hostile_scheme_success_chance_add = @ea_council_scheme_power
+}
+
+ea_council_chaplain_modifier = {
+	learning = @ea_council_seat_skill
+	monthly_piety = @ea_council_chaplain_piety
+}
+
+ea_council_spouse_modifier = {
+	diplomacy = @ea_council_spouse_skill
+	martial = @ea_council_spouse_skill
+	stewardship = @ea_council_spouse_skill
+	intrigue = @ea_council_spouse_skill
+	learning = @ea_council_spouse_skill
+}
+
+### Court aura — on the patron (tiered; replace, do not stack)
+ea_court_aura_1_modifier = {
+	monthly_prestige = @ea_aura_1_prestige
+	court_grandeur_baseline_add = @ea_aura_1_grandeur
+	stress_loss_mult = @ea_aura_1_stress_loss
+	diplomacy = @ea_aura_1_diplomacy
+}
+
+ea_court_aura_2_modifier = {
+	monthly_prestige = @ea_aura_2_prestige
+	court_grandeur_baseline_add = @ea_aura_2_grandeur
+	stress_loss_mult = @ea_aura_2_stress_loss
+	diplomacy = @ea_aura_2_skill
+	stewardship = @ea_aura_2_skill
+	learning = @ea_aura_2_skill
+}
+
+ea_court_aura_3_modifier = {
+	monthly_prestige = @ea_aura_3_prestige
+	court_grandeur_baseline_add = @ea_aura_3_grandeur
+	stress_loss_mult = @ea_aura_3_stress_loss
+	diplomacy = @ea_aura_3_skill
+	martial = @ea_aura_3_skill
+	stewardship = @ea_aura_3_skill
+	intrigue = @ea_aura_3_skill
+	learning = @ea_aura_3_skill
+	monthly_prestige_gain_mult = @ea_aura_3_prestige_mult
+}

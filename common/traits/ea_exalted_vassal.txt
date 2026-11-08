@@ -1,0 +1,68 @@
+@ea_ev_skill = 35
+@ea_ev_health = 25
+@ea_ev_negate_health = 12
+@ea_ev_monthly_prestige = 8
+@ea_ev_monthly_piety = 15
+@ea_ev_monthly_income = 50
+@ea_ev_general_opinion = 120
+@ea_ev_vassal_opinion = 80
+@ea_ev_fellow_vassal_opinion = 80
+@ea_ev_attraction_opinion = 40
+@ea_ev_scheme_stat = 38
+@ea_ev_max_schemes = 2
+@ea_ev_lifestyle_xp_mult = 2.5
+@ea_ev_stress_gain_mult = -30
+@ea_ev_advantage = 15
+@ea_ev_knight_effectiveness = 0.75
+@ea_ev_domain_limit = 2
+@ea_ev_build_speed = -20
+@ea_ev_court_grandeur = 5
+
+ea_exalted_vassal = {
+	category = fame
+	random_creation = 0
+	genetic = no
+	immortal = no
+	good = yes
+	shown_in_ruler_designer = yes
+
+	diplomacy = @ea_ev_skill
+	martial = @ea_ev_skill
+	stewardship = @ea_ev_skill
+	intrigue = @ea_ev_skill
+	learning = @ea_ev_skill
+	prowess = @ea_ev_skill
+	no_prowess_loss_from_age = yes
+
+	monthly_prestige = @ea_ev_monthly_prestige
+	monthly_piety = @ea_ev_monthly_piety
+	monthly_income = @ea_ev_monthly_income
+
+	health = @ea_ev_health
+	negate_health_penalty_add = @ea_ev_negate_health
+
+	general_opinion = @ea_ev_general_opinion
+	vassal_opinion = @ea_ev_vassal_opinion
+	fellow_vassal_opinion = @ea_ev_fellow_vassal_opinion
+	attraction_opinion = @ea_ev_attraction_opinion
+
+	owned_hostile_scheme_success_chance_add = @ea_ev_scheme_stat
+	owned_personal_scheme_success_chance_add = @ea_ev_scheme_stat
+	owned_scheme_secrecy_add = @ea_ev_scheme_stat
+	enemy_hostile_scheme_success_chance_add = -38
+	enemy_hostile_scheme_phase_duration_add = @ea_ev_scheme_stat
+	max_personal_schemes_add = @ea_ev_max_schemes
+	max_hostile_schemes_add = @ea_ev_max_schemes
+
+	monthly_lifestyle_xp_gain_mult = @ea_ev_lifestyle_xp_mult
+	stress_gain_mult = @ea_ev_stress_gain_mult
+
+	# Stronger levy/knight lean than EA — still no SS troop multipliers
+	advantage = @ea_ev_advantage
+	knight_effectiveness_mult = @ea_ev_knight_effectiveness
+
+	domain_limit = @ea_ev_domain_limit
+	build_speed = @ea_ev_build_speed
+
+	court_grandeur_baseline_add = @ea_ev_court_grandeur
+}

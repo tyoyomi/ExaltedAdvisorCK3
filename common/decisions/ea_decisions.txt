@@ -1,0 +1,197 @@
+ea_manage_exalted_advisors_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ea_manage_exalted_advisors_decision_desc
+	selection_tooltip = ea_manage_exalted_advisors_decision_tooltip
+	confirm_text = ea_manage_exalted_advisors_decision_confirm
+
+	ai_check_interval = 0
+
+	is_shown = {
+		is_alive = yes
+		NOT = { has_game_rule = ea_rule_granting_disabled }
+		OR = {
+			is_ai = no
+			has_game_rule = ea_rule_granting_player_and_ai
+		}
+	}
+
+	is_valid = {
+		always = yes
+	}
+
+	effect = {
+		custom_tooltip = ea_manage_exalted_advisors_decision_effect_tt
+		trigger_event = ea_events.2001
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+ea_auto_assign_exalted_advisors_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ea_auto_assign_exalted_advisors_decision_desc
+	selection_tooltip = ea_auto_assign_exalted_advisors_decision_tooltip
+	confirm_text = ea_auto_assign_exalted_advisors_decision_confirm
+
+	ai_check_interval = 0
+
+	is_shown = {
+		is_alive = yes
+		NOT = { has_game_rule = ea_rule_granting_disabled }
+		OR = {
+			is_ai = no
+			has_game_rule = ea_rule_granting_player_and_ai
+		}
+	}
+
+	is_valid = {
+		custom_tooltip = {
+			text = ea_tt_auto_assign_has_eligible
+			ea_has_any_auto_assign_eligible = yes
+		}
+	}
+
+	effect = {
+		custom_tooltip = ea_auto_assign_exalted_advisors_decision_effect_tt
+		ea_auto_assign_exalted_advisors_for_patron_effect = yes
+		trigger_event = ea_events.1501
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+ea_auto_strip_all_exalted_advisors_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ea_auto_strip_all_exalted_advisors_decision_desc
+	selection_tooltip = ea_auto_strip_all_exalted_advisors_decision_tooltip
+	confirm_text = ea_auto_strip_all_exalted_advisors_decision_confirm
+
+	ai_check_interval = 0
+
+	is_shown = {
+		is_alive = yes
+		has_game_rule = ea_rule_auto_strip_decisions_on
+		OR = {
+			is_ai = no
+			has_game_rule = ea_rule_granting_player_and_ai
+		}
+		ea_has_any_exalted_advisor = yes
+	}
+
+	is_valid = {
+		ea_has_any_exalted_advisor = yes
+	}
+
+	effect = {
+		custom_tooltip = ea_auto_strip_all_exalted_advisors_decision_effect_tt
+		ea_auto_strip_all_exalted_advisors_for_patron_effect = yes
+		trigger_event = ea_events.1502
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+ea_auto_strip_unworthy_exalted_advisors_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ea_auto_strip_unworthy_exalted_advisors_decision_desc
+	selection_tooltip = ea_auto_strip_unworthy_exalted_advisors_decision_tooltip
+	confirm_text = ea_auto_strip_unworthy_exalted_advisors_decision_confirm
+
+	ai_check_interval = 0
+
+	is_shown = {
+		is_alive = yes
+		has_game_rule = ea_rule_auto_strip_decisions_on
+		OR = {
+			is_ai = no
+			has_game_rule = ea_rule_granting_player_and_ai
+		}
+		ea_has_any_exalted_advisor = yes
+	}
+
+	is_valid = {
+		ea_has_any_exalted_advisor = yes
+	}
+
+	effect = {
+		custom_tooltip = ea_auto_strip_unworthy_exalted_advisors_decision_effect_tt
+		ea_auto_strip_unworthy_exalted_advisors_for_patron_effect = yes
+		trigger_event = ea_events.1503
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
+
+ea_manage_exalted_vassals_decision = {
+	picture = {
+		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
+	}
+	decision_group_type = major
+	desc = ea_manage_exalted_vassals_decision_desc
+	selection_tooltip = ea_manage_exalted_vassals_decision_tooltip
+	confirm_text = ea_manage_exalted_vassals_decision_confirm
+
+	ai_check_interval = 0
+
+	is_shown = {
+		is_alive = yes
+		NOT = { has_game_rule = ea_rule_granting_disabled }
+		OR = {
+			is_ai = no
+			has_game_rule = ea_rule_granting_player_and_ai
+		}
+	}
+
+	is_valid = {
+		always = yes
+	}
+
+	effect = {
+		custom_tooltip = ea_manage_exalted_vassals_decision_effect_tt
+		trigger_event = ea_events.2101
+	}
+
+	ai_potential = {
+		always = no
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}
