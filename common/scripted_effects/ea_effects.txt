@@ -3,6 +3,122 @@
 
 @ea_recall_grace_years = 1
 
+### Binder index (patron-scoped variable lists — O(bound), not O(world))
+# Lists: ea_bound_advisors / ea_bound_vassals on the patron character.
+
+ea_register_bound_advisor_effect = {
+	# this = advisor with var:ea_patron set
+	if = {
+		limit = {
+			is_alive = yes
+			exists = var:ea_patron
+			var:ea_patron = { is_alive = yes }
+		}
+		save_scope_as = ea_list_member
+		var:ea_patron = {
+			if = {
+				limit = {
+					NOT = {
+						is_target_in_variable_list = {
+							name = ea_bound_advisors
+							target = scope:ea_list_member
+						}
+					}
+				}
+				add_to_variable_list = {
+					name = ea_bound_advisors
+					target = scope:ea_list_member
+				}
+			}
+		}
+	}
+}
+
+ea_unregister_bound_advisor_effect = {
+	# this = advisor; prefers live var:ea_patron, else scope:ea_notify_patron
+	save_scope_as = ea_list_member
+	if = {
+		limit = {
+			exists = var:ea_patron
+			var:ea_patron = { is_alive = yes }
+		}
+		var:ea_patron = {
+			remove_list_variable = {
+				name = ea_bound_advisors
+				target = scope:ea_list_member
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			exists = scope:ea_notify_patron
+			scope:ea_notify_patron = { is_alive = yes }
+		}
+		scope:ea_notify_patron = {
+			remove_list_variable = {
+				name = ea_bound_advisors
+				target = scope:ea_list_member
+			}
+		}
+	}
+}
+
+ea_register_bound_vassal_effect = {
+	# this = exalted vassal with var:ea_ev_patron set
+	if = {
+		limit = {
+			is_alive = yes
+			exists = var:ea_ev_patron
+			var:ea_ev_patron = { is_alive = yes }
+		}
+		save_scope_as = ea_list_member
+		var:ea_ev_patron = {
+			if = {
+				limit = {
+					NOT = {
+						is_target_in_variable_list = {
+							name = ea_bound_vassals
+							target = scope:ea_list_member
+						}
+					}
+				}
+				add_to_variable_list = {
+					name = ea_bound_vassals
+					target = scope:ea_list_member
+				}
+			}
+		}
+	}
+}
+
+ea_unregister_bound_vassal_effect = {
+	save_scope_as = ea_list_member
+	if = {
+		limit = {
+			exists = var:ea_ev_patron
+			var:ea_ev_patron = { is_alive = yes }
+		}
+		var:ea_ev_patron = {
+			remove_list_variable = {
+				name = ea_bound_vassals
+				target = scope:ea_list_member
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			exists = scope:ea_notify_patron
+			scope:ea_notify_patron = { is_alive = yes }
+		}
+		scope:ea_notify_patron = {
+			remove_list_variable = {
+				name = ea_bound_vassals
+				target = scope:ea_list_member
+			}
+		}
+	}
+}
+
 ### Council service modifiers
 ea_clear_council_service_modifiers_effect = {
 	remove_character_modifier = ea_council_service_modifier
@@ -247,6 +363,7 @@ ea_strip_exalted_advisor_effect = {
 			trigger_event = ea_events.1202
 		}
 		ea_clear_recall_grace_effect = yes
+		ea_unregister_bound_advisor_effect = yes
 		remove_trait = ea_exalted_advisor
 		# Refresh aura on former patron before clearing binding
 		if = {
@@ -335,6 +452,7 @@ ea_apply_exalted_advisor_status_effect = {
 			scope:actor = { save_scope_as = ea_patron }
 		}
 		add_character_flag = ea_is_exalted
+		ea_register_bound_advisor_effect = yes
 		ea_sync_council_service_modifier_effect = yes
 		ea_refresh_patron_aura_from_advisor_effect = yes
 	}
@@ -353,6 +471,7 @@ ea_clear_exalted_advisor_status_effect = {
 			}
 		}
 		save_scope_as = ea_former_advisor
+		ea_unregister_bound_advisor_effect = yes
 		ea_clear_council_service_modifiers_effect = yes
 		ea_clear_recall_grace_effect = yes
 		remove_trait = ea_exalted_advisor
@@ -555,17 +674,57 @@ ea_auto_strip_all_exalted_advisors_for_patron_effect = {
 		name = ea_auto_strip_count
 		value = 0
 	}
-	every_living_character = {
+	if = {
 		limit = {
-			has_trait = ea_exalted_advisor
-			exists = var:ea_patron
-			var:ea_patron = scope:ea_patron
+			any_in_list = {
+				variable = ea_bound_advisors
+				count >= 1
+			}
 		}
-		ea_revoke_exalted_advisor_silent_effect = yes
-		scope:ea_patron = {
-			change_variable = {
-				name = ea_auto_strip_count
-				add = 1
+		every_in_list = {
+			variable = ea_bound_advisors
+			limit = {
+				is_alive = yes
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_patron
+			}
+			ea_revoke_exalted_advisor_silent_effect = yes
+			scope:ea_patron = {
+				change_variable = {
+					name = ea_auto_strip_count
+					add = 1
+				}
+			}
+		}
+	}
+	else = {
+		every_vassal = {
+			limit = {
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_patron
+			}
+			ea_revoke_exalted_advisor_silent_effect = yes
+			scope:ea_patron = {
+				change_variable = {
+					name = ea_auto_strip_count
+					add = 1
+				}
+			}
+		}
+		every_courtier_or_guest = {
+			limit = {
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_patron
+			}
+			ea_revoke_exalted_advisor_silent_effect = yes
+			scope:ea_patron = {
+				change_variable = {
+					name = ea_auto_strip_count
+					add = 1
+				}
 			}
 		}
 	}
@@ -578,26 +737,111 @@ ea_auto_strip_unworthy_exalted_advisors_for_patron_effect = {
 		name = ea_auto_strip_count
 		value = 0
 	}
-	every_living_character = {
+	if = {
 		limit = {
-			has_trait = ea_exalted_advisor
-			exists = var:ea_patron
-			var:ea_patron = scope:ea_patron
+			any_in_list = {
+				variable = ea_bound_advisors
+				count >= 1
+			}
 		}
-		# Snapshot trait presence; evaluate may strip
-		if = {
-			limit = { has_trait = ea_exalted_advisor }
-			ea_evaluate_strip_exalted_advisor_effect = yes
+		every_in_list = {
+			variable = ea_bound_advisors
+			limit = {
+				is_alive = yes
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_patron
+			}
 			if = {
-				limit = { NOT = { has_trait = ea_exalted_advisor } }
-				scope:ea_patron = {
-					change_variable = {
-						name = ea_auto_strip_count
-						add = 1
+				limit = { has_trait = ea_exalted_advisor }
+				ea_evaluate_strip_exalted_advisor_effect = yes
+				if = {
+					limit = { NOT = { has_trait = ea_exalted_advisor } }
+					scope:ea_patron = {
+						change_variable = {
+							name = ea_auto_strip_count
+							add = 1
+						}
 					}
 				}
 			}
 		}
+	}
+	else = {
+		every_vassal = {
+			limit = {
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_patron
+			}
+			if = {
+				limit = { has_trait = ea_exalted_advisor }
+				ea_evaluate_strip_exalted_advisor_effect = yes
+				if = {
+					limit = { NOT = { has_trait = ea_exalted_advisor } }
+					scope:ea_patron = {
+						change_variable = {
+							name = ea_auto_strip_count
+							add = 1
+						}
+					}
+				}
+			}
+		}
+		every_courtier_or_guest = {
+			limit = {
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_patron
+			}
+			if = {
+				limit = { has_trait = ea_exalted_advisor }
+				ea_evaluate_strip_exalted_advisor_effect = yes
+				if = {
+					limit = { NOT = { has_trait = ea_exalted_advisor } }
+					scope:ea_patron = {
+						change_variable = {
+							name = ea_auto_strip_count
+							add = 1
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+# this = advisor; expects scope:ea_dying_patron and optional scope:ea_heir_patron
+ea_rebind_or_strip_advisor_on_patron_death_effect = {
+	if = {
+		limit = {
+			exists = scope:ea_heir_patron
+		}
+		# Temporarily point patron at heir to test realm membership
+		set_variable = {
+			name = ea_patron
+			value = scope:ea_heir_patron
+		}
+		if = {
+			limit = { ea_in_patron_realm = yes }
+			# Keep rebound patron; clear any grace under old bond
+			ea_clear_recall_grace_effect = yes
+			ea_register_bound_advisor_effect = yes
+			ea_sync_council_service_modifier_effect = yes
+		}
+		else = {
+			# Prefer strip if not in new patron realm (incl. abroad-during-grace)
+			set_variable = {
+				name = ea_patron
+				value = scope:ea_dying_patron
+			}
+			ea_clear_recall_grace_effect = yes
+			ea_strip_exalted_advisor_effect = yes
+		}
+	}
+	else = {
+		ea_clear_recall_grace_effect = yes
+		ea_strip_exalted_advisor_effect = yes
 	}
 }
 
@@ -619,40 +863,40 @@ ea_on_patron_death_effect = {
 		}
 		primary_heir = { save_scope_as = ea_heir_patron }
 	}
-	every_living_character = {
+	if = {
 		limit = {
-			has_trait = ea_exalted_advisor
-			exists = var:ea_patron
-			var:ea_patron = scope:ea_dying_patron
+			any_in_list = {
+				variable = ea_bound_advisors
+				count >= 1
+			}
 		}
-		if = {
+		every_in_list = {
+			variable = ea_bound_advisors
 			limit = {
-				exists = scope:ea_heir_patron
+				is_alive = yes
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_dying_patron
 			}
-			# Temporarily point patron at heir to test realm membership
-			set_variable = {
-				name = ea_patron
-				value = scope:ea_heir_patron
-			}
-			if = {
-				limit = { ea_in_patron_realm = yes }
-				# Keep rebound patron; clear any grace under old bond
-				ea_clear_recall_grace_effect = yes
-				ea_sync_council_service_modifier_effect = yes
-			}
-			else = {
-				# Prefer strip if not in new patron realm (incl. abroad-during-grace)
-				set_variable = {
-					name = ea_patron
-					value = scope:ea_dying_patron
-				}
-				ea_clear_recall_grace_effect = yes
-				ea_strip_exalted_advisor_effect = yes
-			}
+			ea_rebind_or_strip_advisor_on_patron_death_effect = yes
 		}
-		else = {
-			ea_clear_recall_grace_effect = yes
-			ea_strip_exalted_advisor_effect = yes
+	}
+	else = {
+		every_vassal = {
+			limit = {
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_dying_patron
+			}
+			ea_rebind_or_strip_advisor_on_patron_death_effect = yes
+		}
+		every_courtier_or_guest = {
+			limit = {
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_dying_patron
+			}
+			ea_rebind_or_strip_advisor_on_patron_death_effect = yes
 		}
 	}
 	# Aura on dying patron clears with death; refresh heir if rebound occurred
@@ -678,6 +922,7 @@ ea_on_holder_death_cleanup_effect = {
 			}
 			var:ea_patron = { save_scope_as = ea_notify_patron }
 		}
+		ea_unregister_bound_advisor_effect = yes
 		ea_clear_council_service_modifiers_effect = yes
 		ea_clear_recall_grace_effect = yes
 		remove_variable = ea_patron
@@ -717,6 +962,7 @@ ea_apply_exalted_vassal_status_effect = {
 			scope:actor = { save_scope_as = ea_patron }
 		}
 		add_character_flag = ea_is_exalted_vassal
+		ea_register_bound_vassal_effect = yes
 	}
 }
 
@@ -733,6 +979,7 @@ ea_clear_exalted_vassal_status_effect = {
 			}
 		}
 		save_scope_as = ea_former_vassal
+		ea_unregister_bound_vassal_effect = yes
 		remove_trait = ea_exalted_vassal
 		remove_variable = ea_ev_patron
 		remove_character_flag = ea_is_exalted_vassal
@@ -828,6 +1075,7 @@ ea_strip_exalted_vassal_effect = {
 			limit = { is_ai = no }
 			trigger_event = ea_events.1622
 		}
+		ea_unregister_bound_vassal_effect = yes
 		remove_trait = ea_exalted_vassal
 		remove_variable = ea_ev_patron
 		remove_character_flag = ea_is_exalted_vassal
@@ -859,6 +1107,31 @@ ea_evaluate_strip_exalted_vassal_effect = {
 	}
 }
 
+# this = exalted vassal; expects scope:ea_dying_patron and optional scope:ea_heir_patron
+ea_rebind_or_strip_vassal_on_patron_death_effect = {
+	if = {
+		limit = { exists = scope:ea_heir_patron }
+		set_variable = {
+			name = ea_ev_patron
+			value = scope:ea_heir_patron
+		}
+		if = {
+			limit = { ea_in_ev_patron_realm = yes }
+			ea_register_bound_vassal_effect = yes
+		}
+		else = {
+			set_variable = {
+				name = ea_ev_patron
+				value = scope:ea_dying_patron
+			}
+			ea_strip_exalted_vassal_effect = yes
+		}
+	}
+	else = {
+		ea_strip_exalted_vassal_effect = yes
+	}
+}
+
 ea_on_ev_patron_death_effect = {
 	# this = dying EV patron
 	save_scope_as = ea_dying_patron
@@ -876,32 +1149,32 @@ ea_on_ev_patron_death_effect = {
 		}
 		primary_heir = { save_scope_as = ea_heir_patron }
 	}
-	every_living_character = {
+	if = {
 		limit = {
-			has_trait = ea_exalted_vassal
-			exists = var:ea_ev_patron
-			var:ea_ev_patron = scope:ea_dying_patron
-		}
-		if = {
-			limit = { exists = scope:ea_heir_patron }
-			set_variable = {
-				name = ea_ev_patron
-				value = scope:ea_heir_patron
-			}
-			if = {
-				limit = { ea_in_ev_patron_realm = yes }
-				# keep rebound
-			}
-			else = {
-				set_variable = {
-					name = ea_ev_patron
-					value = scope:ea_dying_patron
-				}
-				ea_strip_exalted_vassal_effect = yes
+			any_in_list = {
+				variable = ea_bound_vassals
+				count >= 1
 			}
 		}
-		else = {
-			ea_strip_exalted_vassal_effect = yes
+		every_in_list = {
+			variable = ea_bound_vassals
+			limit = {
+				is_alive = yes
+				has_trait = ea_exalted_vassal
+				exists = var:ea_ev_patron
+				var:ea_ev_patron = scope:ea_dying_patron
+			}
+			ea_rebind_or_strip_vassal_on_patron_death_effect = yes
+		}
+	}
+	else = {
+		every_vassal = {
+			limit = {
+				has_trait = ea_exalted_vassal
+				exists = var:ea_ev_patron
+				var:ea_ev_patron = scope:ea_dying_patron
+			}
+			ea_rebind_or_strip_vassal_on_patron_death_effect = yes
 		}
 	}
 }
@@ -909,6 +1182,7 @@ ea_on_ev_patron_death_effect = {
 ea_on_ev_holder_death_cleanup_effect = {
 	if = {
 		limit = { has_trait = ea_exalted_vassal }
+		ea_unregister_bound_vassal_effect = yes
 		remove_variable = ea_ev_patron
 		remove_character_flag = ea_is_exalted_vassal
 	}

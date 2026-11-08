@@ -82,8 +82,16 @@ ea_on_title_lost = {
 		OR = {
 			has_trait = ea_exalted_advisor
 			has_trait = ea_exalted_vassal
-			# Patron lost titles — re-check advisors / vassals bound to them
-			any_living_character = {
+			# Patron lost titles — list index first, else realm (never full-world)
+			any_in_list = {
+				variable = ea_bound_advisors
+				count >= 1
+			}
+			any_in_list = {
+				variable = ea_bound_vassals
+				count >= 1
+			}
+			any_vassal = {
 				OR = {
 					AND = {
 						has_trait = ea_exalted_advisor
@@ -97,6 +105,11 @@ ea_on_title_lost = {
 					}
 				}
 			}
+			any_courtier_or_guest = {
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = root
+			}
 		}
 	}
 	effect = {
@@ -108,21 +121,69 @@ ea_on_title_lost = {
 			limit = { has_trait = ea_exalted_vassal }
 			ea_evaluate_strip_exalted_vassal_effect = yes
 		}
-		every_living_character = {
+		if = {
 			limit = {
-				has_trait = ea_exalted_advisor
-				exists = var:ea_patron
-				var:ea_patron = root
+				any_in_list = {
+					variable = ea_bound_advisors
+					count >= 1
+				}
 			}
-			ea_evaluate_strip_exalted_advisor_effect = yes
+			every_in_list = {
+				variable = ea_bound_advisors
+				limit = {
+					is_alive = yes
+					has_trait = ea_exalted_advisor
+					exists = var:ea_patron
+					var:ea_patron = root
+				}
+				ea_evaluate_strip_exalted_advisor_effect = yes
+			}
 		}
-		every_living_character = {
-			limit = {
-				has_trait = ea_exalted_vassal
-				exists = var:ea_ev_patron
-				var:ea_ev_patron = root
+		else = {
+			every_vassal = {
+				limit = {
+					has_trait = ea_exalted_advisor
+					exists = var:ea_patron
+					var:ea_patron = root
+				}
+				ea_evaluate_strip_exalted_advisor_effect = yes
 			}
-			ea_evaluate_strip_exalted_vassal_effect = yes
+			every_courtier_or_guest = {
+				limit = {
+					has_trait = ea_exalted_advisor
+					exists = var:ea_patron
+					var:ea_patron = root
+				}
+				ea_evaluate_strip_exalted_advisor_effect = yes
+			}
+		}
+		if = {
+			limit = {
+				any_in_list = {
+					variable = ea_bound_vassals
+					count >= 1
+				}
+			}
+			every_in_list = {
+				variable = ea_bound_vassals
+				limit = {
+					is_alive = yes
+					has_trait = ea_exalted_vassal
+					exists = var:ea_ev_patron
+					var:ea_ev_patron = root
+				}
+				ea_evaluate_strip_exalted_vassal_effect = yes
+			}
+		}
+		else = {
+			every_vassal = {
+				limit = {
+					has_trait = ea_exalted_vassal
+					exists = var:ea_ev_patron
+					var:ea_ev_patron = root
+				}
+				ea_evaluate_strip_exalted_vassal_effect = yes
+			}
 		}
 		# Patron title loss can change serving counts
 		if = {
@@ -146,6 +207,8 @@ ea_yearly_realm_check = {
 	effect = {
 		if = {
 			limit = { has_trait = ea_exalted_advisor }
+			# Mid-save / abroad: (re)index on patron list
+			ea_register_bound_advisor_effect = yes
 			ea_evaluate_strip_exalted_advisor_effect = yes
 			ea_ai_try_recall_from_advisor_effect = yes
 			ea_sync_council_service_modifier_effect = yes
@@ -153,6 +216,7 @@ ea_yearly_realm_check = {
 		}
 		if = {
 			limit = { has_trait = ea_exalted_vassal }
+			ea_register_bound_vassal_effect = yes
 			ea_evaluate_strip_exalted_vassal_effect = yes
 		}
 	}
@@ -310,13 +374,24 @@ on_death = {
 
 ea_on_death = {
 	effect = {
-		# Dying patron: rebind or strip advisors
+		# Dying patron: rebind or strip advisors (list / realm — never full-world)
 		if = {
 			limit = {
-				any_living_character = {
-					has_trait = ea_exalted_advisor
-					exists = var:ea_patron
-					var:ea_patron = root
+				OR = {
+					any_in_list = {
+						variable = ea_bound_advisors
+						count >= 1
+					}
+					any_vassal = {
+						has_trait = ea_exalted_advisor
+						exists = var:ea_patron
+						var:ea_patron = root
+					}
+					any_courtier_or_guest = {
+						has_trait = ea_exalted_advisor
+						exists = var:ea_patron
+						var:ea_patron = root
+					}
 				}
 			}
 			ea_on_patron_death_effect = yes
@@ -324,10 +399,16 @@ ea_on_death = {
 		# Dying EV patron: rebind or strip exalted vassals
 		if = {
 			limit = {
-				any_living_character = {
-					has_trait = ea_exalted_vassal
-					exists = var:ea_ev_patron
-					var:ea_ev_patron = root
+				OR = {
+					any_in_list = {
+						variable = ea_bound_vassals
+						count >= 1
+					}
+					any_vassal = {
+						has_trait = ea_exalted_vassal
+						exists = var:ea_ev_patron
+						var:ea_ev_patron = root
+					}
 				}
 			}
 			ea_on_ev_patron_death_effect = yes

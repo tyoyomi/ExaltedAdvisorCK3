@@ -211,13 +211,41 @@ ea_events.2001 = {
 	theme = diplomacy
 
 	immediate = {
-		every_living_character = {
+		if = {
 			limit = {
-				has_trait = ea_exalted_advisor
-				exists = var:ea_patron
-				var:ea_patron = root
+				any_in_list = {
+					variable = ea_bound_advisors
+					count >= 1
+				}
 			}
-			add_to_list = ea_my_advisors
+			every_in_list = {
+				variable = ea_bound_advisors
+				limit = {
+					is_alive = yes
+					has_trait = ea_exalted_advisor
+					exists = var:ea_patron
+					var:ea_patron = root
+				}
+				add_to_list = ea_my_advisors
+			}
+		}
+		else = {
+			every_vassal = {
+				limit = {
+					has_trait = ea_exalted_advisor
+					exists = var:ea_patron
+					var:ea_patron = root
+				}
+				add_to_list = ea_my_advisors
+			}
+			every_courtier_or_guest = {
+				limit = {
+					has_trait = ea_exalted_advisor
+					exists = var:ea_patron
+					var:ea_patron = root
+				}
+				add_to_list = ea_my_advisors
+			}
 		}
 	}
 
@@ -254,13 +282,33 @@ ea_events.2101 = {
 	theme = diplomacy
 
 	immediate = {
-		every_living_character = {
+		if = {
 			limit = {
-				has_trait = ea_exalted_vassal
-				exists = var:ea_ev_patron
-				var:ea_ev_patron = root
+				any_in_list = {
+					variable = ea_bound_vassals
+					count >= 1
+				}
 			}
-			add_to_list = ea_my_vassals
+			every_in_list = {
+				variable = ea_bound_vassals
+				limit = {
+					is_alive = yes
+					has_trait = ea_exalted_vassal
+					exists = var:ea_ev_patron
+					var:ea_ev_patron = root
+				}
+				add_to_list = ea_my_vassals
+			}
+		}
+		else = {
+			every_vassal = {
+				limit = {
+					has_trait = ea_exalted_vassal
+					exists = var:ea_ev_patron
+					var:ea_ev_patron = root
+				}
+				add_to_list = ea_my_vassals
+			}
 		}
 	}
 
