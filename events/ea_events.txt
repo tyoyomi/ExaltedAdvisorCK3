@@ -211,6 +211,8 @@ ea_events.2001 = {
 	theme = diplomacy
 
 	immediate = {
+		ea_ensure_advisor_defaults_effect = yes
+		ea_reindex_bound_advisors_in_realm_effect = yes
 		if = {
 			limit = {
 				any_in_list = {
@@ -255,6 +257,33 @@ ea_events.2001 = {
 	}
 
 	option = {
+		name = ea_events.2001.intensity_low
+		trigger = { var:ea_cfg_intensity = 1 }
+		custom_tooltip = ea_events.2001.intensity_tt
+		ea_cycle_intensity_cfg_effect = yes
+		trigger_event = ea_events.2001
+	}
+	option = {
+		name = ea_events.2001.intensity_mid
+		trigger = { var:ea_cfg_intensity = 2 }
+		custom_tooltip = ea_events.2001.intensity_tt
+		ea_cycle_intensity_cfg_effect = yes
+		trigger_event = ea_events.2001
+	}
+	option = {
+		name = ea_events.2001.intensity_high
+		trigger = {
+			OR = {
+				var:ea_cfg_intensity = 3
+				NOT = { has_variable = ea_cfg_intensity }
+			}
+		}
+		custom_tooltip = ea_events.2001.intensity_tt
+		ea_cycle_intensity_cfg_effect = yes
+		trigger_event = ea_events.2001
+	}
+
+	option = {
 		name = ea_events.2001.b
 		trigger = {
 			any_in_list = {
@@ -263,7 +292,7 @@ ea_events.2001 = {
 			}
 		}
 		custom_tooltip = ea_events.2001.b_tt
-		# Point players at the revoke interaction rather than duplicating logic
+		# Point players at revoke / Assign Specialty interactions
 	}
 
 	option = {
@@ -282,6 +311,7 @@ ea_events.2101 = {
 	theme = diplomacy
 
 	immediate = {
+		ea_reindex_bound_vassals_in_realm_effect = yes
 		if = {
 			limit = {
 				any_in_list = {
@@ -326,6 +356,54 @@ ea_events.2101 = {
 			}
 		}
 		custom_tooltip = ea_events.2101.b_tt
+	}
+}
+
+# Loud-bestow specialty chooser (actor = patron; scope:ea_new_advisor set)
+ea_events.2201 = {
+	type = character_event
+	title = ea_events.2201.t
+	desc = ea_events.2201.desc
+	theme = diplomacy
+
+	trigger = {
+		exists = scope:ea_new_advisor
+		scope:ea_new_advisor = {
+			is_alive = yes
+			has_trait = ea_exalted_advisor
+		}
+	}
+
+	option = {
+		name = ea_events.2201.marshal
+		custom_tooltip = ea_events.2201.marshal_tt
+		scope:ea_new_advisor = {
+			ea_set_specialist_marshal_effect = yes
+		}
+	}
+
+	option = {
+		name = ea_events.2201.spymaster
+		custom_tooltip = ea_events.2201.spymaster_tt
+		scope:ea_new_advisor = {
+			ea_set_specialist_spymaster_effect = yes
+		}
+	}
+
+	option = {
+		name = ea_events.2201.steward
+		custom_tooltip = ea_events.2201.steward_tt
+		scope:ea_new_advisor = {
+			ea_set_specialist_steward_effect = yes
+		}
+	}
+
+	option = {
+		name = ea_events.2201.generic
+		custom_tooltip = ea_events.2201.generic_tt
+		scope:ea_new_advisor = {
+			ea_set_specialist_generic_effect = yes
+		}
 	}
 }
 

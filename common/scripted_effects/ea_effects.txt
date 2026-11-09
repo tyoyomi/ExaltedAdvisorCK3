@@ -119,48 +119,159 @@ ea_unregister_bound_vassal_effect = {
 	}
 }
 
-### Council service modifiers
+### Council service modifiers (intensity-tiered; shared hub dial on patron)
 ea_clear_council_service_modifiers_effect = {
 	remove_character_modifier = ea_council_service_modifier
+	remove_character_modifier = ea_council_service_1_modifier
+	remove_character_modifier = ea_council_service_2_modifier
+	remove_character_modifier = ea_council_service_3_modifier
 	remove_character_modifier = ea_council_chancellor_modifier
+	remove_character_modifier = ea_council_chancellor_1_modifier
+	remove_character_modifier = ea_council_chancellor_2_modifier
+	remove_character_modifier = ea_council_chancellor_3_modifier
 	remove_character_modifier = ea_council_marshal_modifier
+	remove_character_modifier = ea_council_marshal_1_modifier
+	remove_character_modifier = ea_council_marshal_2_modifier
+	remove_character_modifier = ea_council_marshal_3_modifier
 	remove_character_modifier = ea_council_steward_modifier
+	remove_character_modifier = ea_council_steward_1_modifier
+	remove_character_modifier = ea_council_steward_2_modifier
+	remove_character_modifier = ea_council_steward_3_modifier
 	remove_character_modifier = ea_council_spymaster_modifier
+	remove_character_modifier = ea_council_spymaster_1_modifier
+	remove_character_modifier = ea_council_spymaster_2_modifier
+	remove_character_modifier = ea_council_spymaster_3_modifier
 	remove_character_modifier = ea_council_chaplain_modifier
+	remove_character_modifier = ea_council_chaplain_1_modifier
+	remove_character_modifier = ea_council_chaplain_2_modifier
+	remove_character_modifier = ea_council_chaplain_3_modifier
 	remove_character_modifier = ea_council_spouse_modifier
+	remove_character_modifier = ea_council_spouse_1_modifier
+	remove_character_modifier = ea_council_spouse_2_modifier
+	remove_character_modifier = ea_council_spouse_3_modifier
+}
+
+ea_patron_intensity_value_effect = {
+	# Sets var:ea_intensity_tier on this advisor from patron cfg (default Mid=2)
+	set_variable = { name = ea_intensity_tier value = 2 }
+	if = {
+		limit = {
+			exists = var:ea_patron
+			var:ea_patron = { is_alive = yes }
+		}
+		save_scope_as = ea_intensity_advisor
+		var:ea_patron = {
+			ea_ensure_advisor_defaults_effect = yes
+			if = {
+				limit = { var:ea_cfg_intensity = 1 }
+				scope:ea_intensity_advisor = {
+					set_variable = { name = ea_intensity_tier value = 1 }
+				}
+			}
+			else_if = {
+				limit = { var:ea_cfg_intensity = 3 }
+				scope:ea_intensity_advisor = {
+					set_variable = { name = ea_intensity_tier value = 3 }
+				}
+			}
+			else = {
+				scope:ea_intensity_advisor = {
+					set_variable = { name = ea_intensity_tier value = 2 }
+				}
+			}
+		}
+	}
 }
 
 ea_sync_council_service_modifier_effect = {
 	ea_clear_council_service_modifiers_effect = yes
 	if = {
 		limit = { ea_is_councillor_for_patron = yes }
-		add_character_modifier = {
-			modifier = ea_council_service_modifier
-		}
+		ea_patron_intensity_value_effect = yes
 		if = {
-			limit = { has_council_position = councillor_chancellor }
-			add_character_modifier = { modifier = ea_council_chancellor_modifier }
+			limit = { var:ea_intensity_tier = 1 }
+			add_character_modifier = { modifier = ea_council_service_1_modifier }
+			if = {
+				limit = { has_council_position = councillor_chancellor }
+				add_character_modifier = { modifier = ea_council_chancellor_1_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_marshal }
+				add_character_modifier = { modifier = ea_council_marshal_1_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_steward }
+				add_character_modifier = { modifier = ea_council_steward_1_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_spymaster }
+				add_character_modifier = { modifier = ea_council_spymaster_1_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_court_chaplain }
+				add_character_modifier = { modifier = ea_council_chaplain_1_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_spouse }
+				add_character_modifier = { modifier = ea_council_spouse_1_modifier }
+			}
 		}
 		else_if = {
-			limit = { has_council_position = councillor_marshal }
-			add_character_modifier = { modifier = ea_council_marshal_modifier }
+			limit = { var:ea_intensity_tier = 3 }
+			add_character_modifier = { modifier = ea_council_service_3_modifier }
+			if = {
+				limit = { has_council_position = councillor_chancellor }
+				add_character_modifier = { modifier = ea_council_chancellor_3_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_marshal }
+				add_character_modifier = { modifier = ea_council_marshal_3_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_steward }
+				add_character_modifier = { modifier = ea_council_steward_3_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_spymaster }
+				add_character_modifier = { modifier = ea_council_spymaster_3_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_court_chaplain }
+				add_character_modifier = { modifier = ea_council_chaplain_3_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_spouse }
+				add_character_modifier = { modifier = ea_council_spouse_3_modifier }
+			}
 		}
-		else_if = {
-			limit = { has_council_position = councillor_steward }
-			add_character_modifier = { modifier = ea_council_steward_modifier }
+		else = {
+			add_character_modifier = { modifier = ea_council_service_2_modifier }
+			if = {
+				limit = { has_council_position = councillor_chancellor }
+				add_character_modifier = { modifier = ea_council_chancellor_2_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_marshal }
+				add_character_modifier = { modifier = ea_council_marshal_2_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_steward }
+				add_character_modifier = { modifier = ea_council_steward_2_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_spymaster }
+				add_character_modifier = { modifier = ea_council_spymaster_2_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_court_chaplain }
+				add_character_modifier = { modifier = ea_council_chaplain_2_modifier }
+			}
+			else_if = {
+				limit = { has_council_position = councillor_spouse }
+				add_character_modifier = { modifier = ea_council_spouse_2_modifier }
+			}
 		}
-		else_if = {
-			limit = { has_council_position = councillor_spymaster }
-			add_character_modifier = { modifier = ea_council_spymaster_modifier }
-		}
-		else_if = {
-			limit = { has_council_position = councillor_court_chaplain }
-			add_character_modifier = { modifier = ea_council_chaplain_modifier }
-		}
-		else_if = {
-			limit = { has_council_position = councillor_spouse }
-			add_character_modifier = { modifier = ea_council_spouse_modifier }
-		}
+		remove_variable = ea_intensity_tier
 	}
 }
 
@@ -340,6 +451,7 @@ ea_strip_exalted_advisor_effect = {
 		}
 		save_scope_as = ea_former_advisor
 		ea_clear_council_service_modifiers_effect = yes
+		ea_clear_specialist_modifiers_effect = yes
 		# Patron notify: grace-ended uses 1404; other strips use 1201
 		if = {
 			limit = {
@@ -373,6 +485,7 @@ ea_strip_exalted_advisor_effect = {
 			}
 		}
 		remove_variable = ea_patron
+		remove_variable = ea_specialist_package
 		remove_character_flag = ea_is_exalted
 		remove_character_flag = ea_strip_after_grace
 	}
@@ -473,6 +586,7 @@ ea_clear_exalted_advisor_status_effect = {
 		save_scope_as = ea_former_advisor
 		ea_unregister_bound_advisor_effect = yes
 		ea_clear_council_service_modifiers_effect = yes
+		ea_clear_specialist_modifiers_effect = yes
 		ea_clear_recall_grace_effect = yes
 		remove_trait = ea_exalted_advisor
 		if = {
@@ -482,6 +596,7 @@ ea_clear_exalted_advisor_status_effect = {
 			}
 		}
 		remove_variable = ea_patron
+		remove_variable = ea_specialist_package
 		remove_character_flag = ea_is_exalted
 	}
 }
@@ -497,14 +612,17 @@ ea_bestow_exalted_advisor_effect = {
 			NOT = { has_trait = ea_exalted_advisor }
 		}
 		ea_apply_exalted_advisor_status_effect = yes
-		# Notify granter
+		save_scope_as = ea_new_advisor
+		# Notify granter + specialty chooser (loud path only)
 		if = {
 			limit = {
 				exists = var:ea_patron
 				var:ea_patron = { is_alive = yes is_ai = no }
 			}
 			var:ea_patron = {
+				ea_ensure_advisor_defaults_effect = yes
 				trigger_event = ea_events.1001
+				trigger_event = ea_events.2201
 			}
 		}
 		# Notify recipient (if player and not same as patron)
@@ -924,8 +1042,10 @@ ea_on_holder_death_cleanup_effect = {
 		}
 		ea_unregister_bound_advisor_effect = yes
 		ea_clear_council_service_modifiers_effect = yes
+		ea_clear_specialist_modifiers_effect = yes
 		ea_clear_recall_grace_effect = yes
 		remove_variable = ea_patron
+		remove_variable = ea_specialist_package
 		remove_character_flag = ea_is_exalted
 		# Trait dies with character; refresh former patron aura
 		if = {
@@ -1266,6 +1386,439 @@ ea_try_inherit_exalted_advisor_effect = {
 			if = {
 				limit = { ea_can_receive_exalted_advisor = yes }
 				ea_bestow_exalted_advisor_silent_effect = yes
+			}
+		}
+	}
+}
+
+### v0.5.0 — intensity, specialists, binder reindex, loyalty, tutoring
+
+ea_ensure_advisor_defaults_effect = {
+	# this = patron
+	if = {
+		limit = { NOT = { has_variable = ea_cfg_intensity } }
+		if = {
+			limit = { has_game_rule = ea_rule_intensity_default_low }
+			set_variable = { name = ea_cfg_intensity value = 1 }
+		}
+		else_if = {
+			limit = { has_game_rule = ea_rule_intensity_default_mid }
+			set_variable = { name = ea_cfg_intensity value = 2 }
+		}
+		else = {
+			# high default (game rule high or unset)
+			set_variable = { name = ea_cfg_intensity value = 3 }
+		}
+	}
+}
+
+ea_cycle_intensity_cfg_effect = {
+	# this = patron
+	ea_ensure_advisor_defaults_effect = yes
+	if = {
+		limit = { var:ea_cfg_intensity = 1 }
+		set_variable = { name = ea_cfg_intensity value = 2 }
+	}
+	else_if = {
+		limit = { var:ea_cfg_intensity = 2 }
+		set_variable = { name = ea_cfg_intensity value = 3 }
+	}
+	else = {
+		set_variable = { name = ea_cfg_intensity value = 1 }
+	}
+	ea_refresh_intensity_modifiers_for_patron_effect = yes
+}
+
+ea_clear_specialist_modifiers_effect = {
+	remove_character_modifier = ea_specialist_marshal_1_modifier
+	remove_character_modifier = ea_specialist_marshal_2_modifier
+	remove_character_modifier = ea_specialist_marshal_3_modifier
+	remove_character_modifier = ea_specialist_spymaster_1_modifier
+	remove_character_modifier = ea_specialist_spymaster_2_modifier
+	remove_character_modifier = ea_specialist_spymaster_3_modifier
+	remove_character_modifier = ea_specialist_steward_1_modifier
+	remove_character_modifier = ea_specialist_steward_2_modifier
+	remove_character_modifier = ea_specialist_steward_3_modifier
+}
+
+ea_refresh_specialist_modifier_effect = {
+	# this = advisor with optional var:ea_specialist_package (1 marshal / 2 spy / 3 steward)
+	ea_clear_specialist_modifiers_effect = yes
+	if = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			has_variable = ea_specialist_package
+			NOT = { var:ea_specialist_package = 0 }
+		}
+		ea_patron_intensity_value_effect = yes
+		if = {
+			limit = { var:ea_specialist_package = 1 }
+			if = {
+				limit = { var:ea_intensity_tier = 1 }
+				add_character_modifier = { modifier = ea_specialist_marshal_1_modifier }
+			}
+			else_if = {
+				limit = { var:ea_intensity_tier = 3 }
+				add_character_modifier = { modifier = ea_specialist_marshal_3_modifier }
+			}
+			else = {
+				add_character_modifier = { modifier = ea_specialist_marshal_2_modifier }
+			}
+		}
+		else_if = {
+			limit = { var:ea_specialist_package = 2 }
+			if = {
+				limit = { var:ea_intensity_tier = 1 }
+				add_character_modifier = { modifier = ea_specialist_spymaster_1_modifier }
+			}
+			else_if = {
+				limit = { var:ea_intensity_tier = 3 }
+				add_character_modifier = { modifier = ea_specialist_spymaster_3_modifier }
+			}
+			else = {
+				add_character_modifier = { modifier = ea_specialist_spymaster_2_modifier }
+			}
+		}
+		else_if = {
+			limit = { var:ea_specialist_package = 3 }
+			if = {
+				limit = { var:ea_intensity_tier = 1 }
+				add_character_modifier = { modifier = ea_specialist_steward_1_modifier }
+			}
+			else_if = {
+				limit = { var:ea_intensity_tier = 3 }
+				add_character_modifier = { modifier = ea_specialist_steward_3_modifier }
+			}
+			else = {
+				add_character_modifier = { modifier = ea_specialist_steward_2_modifier }
+			}
+		}
+		remove_variable = ea_intensity_tier
+	}
+}
+
+ea_apply_specialist_package_effect = {
+	# this = advisor; expects var:ea_specialist_package already set (0–3)
+	if = {
+		limit = { has_trait = ea_exalted_advisor }
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_variable = ea_specialist_package }
+					var:ea_specialist_package = 0
+				}
+			}
+			remove_variable = ea_specialist_package
+			ea_clear_specialist_modifiers_effect = yes
+		}
+		else = {
+			ea_refresh_specialist_modifier_effect = yes
+		}
+	}
+}
+
+ea_set_specialist_marshal_effect = {
+	set_variable = { name = ea_specialist_package value = 1 }
+	ea_apply_specialist_package_effect = yes
+}
+
+ea_set_specialist_spymaster_effect = {
+	set_variable = { name = ea_specialist_package value = 2 }
+	ea_apply_specialist_package_effect = yes
+}
+
+ea_set_specialist_steward_effect = {
+	set_variable = { name = ea_specialist_package value = 3 }
+	ea_apply_specialist_package_effect = yes
+}
+
+ea_set_specialist_generic_effect = {
+	set_variable = { name = ea_specialist_package value = 0 }
+	ea_apply_specialist_package_effect = yes
+}
+
+ea_refresh_intensity_modifiers_for_patron_effect = {
+	# this = patron — refresh bound advisors' seat + specialist mods
+	save_scope_as = ea_patron
+	if = {
+		limit = {
+			any_in_list = {
+				variable = ea_bound_advisors
+				count >= 1
+			}
+		}
+		every_in_list = {
+			variable = ea_bound_advisors
+			limit = {
+				is_alive = yes
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_patron
+			}
+			ea_refresh_specialist_modifier_effect = yes
+			ea_sync_council_service_modifier_effect = yes
+		}
+	}
+	else = {
+		every_vassal = {
+			limit = {
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_patron
+			}
+			ea_refresh_specialist_modifier_effect = yes
+			ea_sync_council_service_modifier_effect = yes
+		}
+		every_courtier_or_guest = {
+			limit = {
+				has_trait = ea_exalted_advisor
+				exists = var:ea_patron
+				var:ea_patron = scope:ea_patron
+			}
+			ea_refresh_specialist_modifier_effect = yes
+			ea_sync_council_service_modifier_effect = yes
+		}
+	}
+}
+
+ea_reindex_bound_advisors_in_realm_effect = {
+	# this = patron — mid-save heal without world scan
+	save_scope_as = ea_patron
+	every_vassal = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:ea_patron
+		}
+		ea_register_bound_advisor_effect = yes
+	}
+	every_courtier_or_guest = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:ea_patron
+		}
+		ea_register_bound_advisor_effect = yes
+	}
+	every_councillor = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:ea_patron
+		}
+		ea_register_bound_advisor_effect = yes
+	}
+	every_consort = {
+		limit = {
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:ea_patron
+		}
+		ea_register_bound_advisor_effect = yes
+	}
+}
+
+ea_reindex_bound_vassals_in_realm_effect = {
+	# this = patron
+	save_scope_as = ea_ev_patron
+	every_vassal = {
+		limit = {
+			has_trait = ea_exalted_vassal
+			exists = var:ea_ev_patron
+			var:ea_ev_patron = scope:ea_ev_patron
+		}
+		ea_register_bound_vassal_effect = yes
+	}
+}
+
+ea_apply_vassal_loyalty_tick_effect = {
+	# this = Exalted Vassal
+	if = {
+		limit = {
+			has_game_rule = ea_rule_vassal_loyalty_on
+			has_trait = ea_exalted_vassal
+			exists = var:ea_ev_patron
+			var:ea_ev_patron = { is_alive = yes }
+			ea_in_ev_patron_realm = yes
+		}
+		save_scope_as = ea_loyal_vassal
+		var:ea_ev_patron = { save_scope_as = ea_loyalty_patron }
+		# Soft Glue–lite sticky modifier (refresh/replace)
+		remove_character_modifier = ea_vassal_loyalty_modifier
+		add_character_modifier = {
+			modifier = ea_vassal_loyalty_modifier
+			years = 5
+		}
+		add_opinion = {
+			target = scope:ea_loyalty_patron
+			modifier = ea_vassal_loyalty_opinion
+			years = 5
+		}
+		# Weak favor_hook drip by patron intensity (never strong)
+		scope:ea_loyalty_patron = {
+			ea_ensure_advisor_defaults_effect = yes
+		}
+		if = {
+			limit = {
+				OR = {
+					scope:ea_loyalty_patron = { var:ea_cfg_intensity = 2 }
+					scope:ea_loyalty_patron = { var:ea_cfg_intensity = 3 }
+				}
+				scope:ea_loyalty_patron = {
+					can_add_hook = {
+						type = favor_hook
+						target = scope:ea_loyal_vassal
+					}
+				}
+			}
+			scope:ea_loyalty_patron = {
+				add_hook = {
+					type = favor_hook
+					target = scope:ea_loyal_vassal
+				}
+			}
+		}
+	}
+}
+
+ea_try_heir_tutoring_tick_effect = {
+	# this = child ward
+	if = {
+		limit = { ea_child_eligible_for_ea_tutoring = yes }
+		guardian = { save_scope_as = ea_tutor }
+		scope:ea_tutor = {
+			if = {
+				limit = {
+					exists = var:ea_patron
+					var:ea_patron = { is_alive = yes }
+				}
+				var:ea_patron = {
+					ea_ensure_advisor_defaults_effect = yes
+					save_scope_as = ea_tutor_patron
+				}
+			}
+		}
+		# Specialty lifestyle crumbs by intensity; generic = mild all five
+		if = {
+			limit = {
+				scope:ea_tutor = {
+					has_variable = ea_specialist_package
+					var:ea_specialist_package = 1
+				}
+			}
+			if = {
+				limit = {
+					exists = scope:ea_tutor_patron
+					scope:ea_tutor_patron = { var:ea_cfg_intensity = 1 }
+				}
+				add_martial_lifestyle_xp = 50
+			}
+			else_if = {
+				limit = {
+					exists = scope:ea_tutor_patron
+					scope:ea_tutor_patron = { var:ea_cfg_intensity = 3 }
+				}
+				add_martial_lifestyle_xp = 300
+				if = {
+					limit = { NOT = { has_character_flag = ea_tutoring_perk_granted } }
+					add_martial_lifestyle_perk_points = 1
+					add_character_flag = ea_tutoring_perk_granted
+				}
+			}
+			else = {
+				add_martial_lifestyle_xp = 150
+			}
+		}
+		else_if = {
+			limit = {
+				scope:ea_tutor = {
+					has_variable = ea_specialist_package
+					var:ea_specialist_package = 2
+				}
+			}
+			if = {
+				limit = {
+					exists = scope:ea_tutor_patron
+					scope:ea_tutor_patron = { var:ea_cfg_intensity = 1 }
+				}
+				add_intrigue_lifestyle_xp = 50
+			}
+			else_if = {
+				limit = {
+					exists = scope:ea_tutor_patron
+					scope:ea_tutor_patron = { var:ea_cfg_intensity = 3 }
+				}
+				add_intrigue_lifestyle_xp = 300
+				if = {
+					limit = { NOT = { has_character_flag = ea_tutoring_perk_granted } }
+					add_intrigue_lifestyle_perk_points = 1
+					add_character_flag = ea_tutoring_perk_granted
+				}
+			}
+			else = {
+				add_intrigue_lifestyle_xp = 150
+			}
+		}
+		else_if = {
+			limit = {
+				scope:ea_tutor = {
+					has_variable = ea_specialist_package
+					var:ea_specialist_package = 3
+				}
+			}
+			if = {
+				limit = {
+					exists = scope:ea_tutor_patron
+					scope:ea_tutor_patron = { var:ea_cfg_intensity = 1 }
+				}
+				add_stewardship_lifestyle_xp = 50
+			}
+			else_if = {
+				limit = {
+					exists = scope:ea_tutor_patron
+					scope:ea_tutor_patron = { var:ea_cfg_intensity = 3 }
+				}
+				add_stewardship_lifestyle_xp = 300
+				if = {
+					limit = { NOT = { has_character_flag = ea_tutoring_perk_granted } }
+					add_stewardship_lifestyle_perk_points = 1
+					add_character_flag = ea_tutoring_perk_granted
+				}
+			}
+			else = {
+				add_stewardship_lifestyle_xp = 150
+			}
+		}
+		else = {
+			# Generic tutor crumbs across lifestyles
+			if = {
+				limit = {
+					exists = scope:ea_tutor_patron
+					scope:ea_tutor_patron = { var:ea_cfg_intensity = 1 }
+				}
+				add_diplomacy_lifestyle_xp = 10
+				add_martial_lifestyle_xp = 10
+				add_stewardship_lifestyle_xp = 10
+				add_intrigue_lifestyle_xp = 10
+				add_learning_lifestyle_xp = 10
+			}
+			else_if = {
+				limit = {
+					exists = scope:ea_tutor_patron
+					scope:ea_tutor_patron = { var:ea_cfg_intensity = 3 }
+				}
+				add_diplomacy_lifestyle_xp = 60
+				add_martial_lifestyle_xp = 60
+				add_stewardship_lifestyle_xp = 60
+				add_intrigue_lifestyle_xp = 60
+				add_learning_lifestyle_xp = 60
+			}
+			else = {
+				add_diplomacy_lifestyle_xp = 30
+				add_martial_lifestyle_xp = 30
+				add_stewardship_lifestyle_xp = 30
+				add_intrigue_lifestyle_xp = 30
+				add_learning_lifestyle_xp = 30
 			}
 		}
 	}

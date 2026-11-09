@@ -194,7 +194,7 @@ ea_on_title_lost = {
 }
 
 random_yearly_everyone_pulse = {
-	on_actions = { ea_yearly_realm_check }
+	on_actions = { ea_yearly_realm_check ea_yearly_tutoring_check }
 }
 
 ea_yearly_realm_check = {
@@ -211,6 +211,7 @@ ea_yearly_realm_check = {
 			ea_register_bound_advisor_effect = yes
 			ea_evaluate_strip_exalted_advisor_effect = yes
 			ea_ai_try_recall_from_advisor_effect = yes
+			ea_refresh_specialist_modifier_effect = yes
 			ea_sync_council_service_modifier_effect = yes
 			ea_refresh_patron_aura_from_advisor_effect = yes
 		}
@@ -218,7 +219,22 @@ ea_yearly_realm_check = {
 			limit = { has_trait = ea_exalted_vassal }
 			ea_register_bound_vassal_effect = yes
 			ea_evaluate_strip_exalted_vassal_effect = yes
+			ea_apply_vassal_loyalty_tick_effect = yes
 		}
+	}
+}
+
+# Heir tutoring crumbs while educated by an Exalted Advisor (O(child), not world)
+ea_yearly_tutoring_check = {
+	trigger = {
+		is_adult = no
+		is_alive = yes
+		has_game_rule = ea_rule_heir_tutoring_on
+		exists = guardian
+		guardian = { has_trait = ea_exalted_advisor }
+	}
+	effect = {
+		ea_try_heir_tutoring_tick_effect = yes
 	}
 }
 
