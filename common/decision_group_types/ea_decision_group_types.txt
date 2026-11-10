@@ -1,0 +1,7 @@
+# Exalted Advisor — custom decision group (additive; does not replace vanilla major)
+
+ea_exalted = {
+	sort_order = 189
+	gui_tags = { big_button }
+	important_decision_group = yes
+}

@@ -23,9 +23,12 @@
  ea_revoke_exalted_vassal_interaction:0 "Revoke Exalted Vassal"
  ea_revoke_exalted_vassal_interaction_desc:0 "Strip [recipient.GetShortUIName] of the Exalted Vassal honor."
 
+ # Decision group
+ decision_group_type_ea_exalted:0 "Exalted Advisor"
+
  # Decisions
  ea_manage_exalted_advisors_decision:0 "Manage Exalted Advisors"
- ea_manage_exalted_advisors_decision_desc:0 "Review who carries your Exalted Advisor honor. Bestow, revoke, and recall are done through character interactions; this decision opens a quick summary. Bulk auto-assign and strip are sibling decisions."
+ ea_manage_exalted_advisors_decision_desc:0 "Review who carries your Exalted Advisor honor. Bestow, revoke, and recall are done through character interactions; this decision opens a quick summary. Bulk auto-assign, mass bestow, and strip live under Exalted Advisor: Actions."
  ea_manage_exalted_advisors_decision_tooltip:0 "Open a summary of your Exalted Advisors and how to appoint or strip them"
  ea_manage_exalted_advisors_decision_confirm:0 "Review Advisors"
  ea_manage_exalted_advisors_decision_effect_tt:0 "You will receive a brief overview of your Exalted Advisors"
@@ -53,6 +56,22 @@
  ea_manage_exalted_vassals_decision_tooltip:0 "Open a summary of your Exalted Vassals"
  ea_manage_exalted_vassals_decision_confirm:0 "Review Vassals"
  ea_manage_exalted_vassals_decision_effect_tt:0 "You will receive a brief overview of your Exalted Vassals"
+
+ # Actions hub
+ ea_exalted_actions_decision:0 "Exalted Advisor: Actions"
+ ea_exalted_actions_decision_desc:0 "Open Advisor Actions: mass bestow court and vassals, auto-assign eligible advisors, or strip all or unworthy holders.\n\nDone is always first. Gated actions stay hidden until ready."
+ ea_exalted_actions_decision_tooltip:0 "Open Advisor Actions for mass bestow, auto-assign, and strip verbs"
+ ea_exalted_actions_decision_confirm:0 "Open Actions"
+ ea_exalted_actions_decision_effect_tt:0 "Opens the Exalted Advisor Actions hub"
+
+ ea_actions.1001.t:0 "Advisor Actions"
+ ea_actions.1001.desc:0 "Choose an Advisor action. Done closes the hub. Gated actions stay hidden until ready. Mass bestow and strip show their own summary when finished."
+ ea_actions.1001.close:0 "Done"
+ ea_actions.1001.mass_bestow:0 "Mass Bestow Exalted"
+ ea_actions.1001.auto_assign:0 "Auto-Assign Exalted Advisors"
+ ea_actions.1001.strip_all:0 "Strip All Exalted Advisors"
+ ea_actions.1001.strip_unworthy:0 "Strip Unworthy Exalted Advisors"
+ ea_actions.tt.close:0 "Close Advisor Actions without taking an action."
 
  # Modifiers — council service
  ea_council_service_modifier:0 "Exalted Council Service"
@@ -249,7 +268,7 @@
  ea_events.1622.a:0 "I understand."
 
  ea_events.2001.t:0 "Your Exalted Advisors"
- ea_events.2001.desc:0 "Use character interactions to Bestow, Revoke, or Recall the Exalted Advisor honor. Bulk Auto-Assign and Strip decisions sit beside Manage in the decision list.\n\nBestow: right-click a courtier, guest, or vassal.\nRevoke: right-click one of your Exalted Advisors.\nRecall: right-click an advisor who is abroad."
+ ea_events.2001.desc:0 "Use character interactions to Bestow, Revoke, or Recall the Exalted Advisor honor. Mass bestow, auto-assign, and strip live under Exalted Advisor: Actions in the decision list.\n\nBestow: right-click a courtier, guest, or vassal.\nRevoke: right-click one of your Exalted Advisors.\nRecall: right-click an advisor who is abroad."
  ea_events.2001.a:0 "I will use interactions"
  ea_events.2001.a_tt:0 "Bestow, Revoke, and Recall are available as character interactions"
  ea_events.2001.b:0 "I still have Exalted Advisors"
