@@ -1,8 +1,11 @@
+# Exalted Advisor â€” Manage + Actions fold (suite major-decisions collapse).
+# Player mass/assign/strip verbs live on ea_actions.1001.
+
 ea_manage_exalted_advisors_decision = {
 	picture = {
 		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
 	}
-	decision_group_type = major
+	decision_group_type = ea_exalted
 	desc = ea_manage_exalted_advisors_decision_desc
 	selection_tooltip = ea_manage_exalted_advisors_decision_tooltip
 	confirm_text = ea_manage_exalted_advisors_decision_confirm
@@ -36,133 +39,41 @@ ea_manage_exalted_advisors_decision = {
 	}
 }
 
-ea_auto_assign_exalted_advisors_decision = {
+ea_exalted_actions_decision = {
 	picture = {
 		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
 	}
-	decision_group_type = major
-	desc = ea_auto_assign_exalted_advisors_decision_desc
-	selection_tooltip = ea_auto_assign_exalted_advisors_decision_tooltip
-	confirm_text = ea_auto_assign_exalted_advisors_decision_confirm
+	decision_group_type = ea_exalted
+	desc = ea_exalted_actions_decision_desc
+	selection_tooltip = ea_exalted_actions_decision_tooltip
+	confirm_text = ea_exalted_actions_decision_confirm
 
 	ai_check_interval = 0
 
 	is_shown = {
 		is_alive = yes
+		is_ai = no
 		NOT = { has_game_rule = ea_rule_granting_disabled }
-		OR = {
-			is_ai = no
-			has_game_rule = ea_rule_granting_player_and_ai
-		}
 	}
 
 	is_valid = {
-		custom_tooltip = {
-			text = ea_tt_auto_assign_has_eligible
-			ea_has_any_auto_assign_eligible = yes
-		}
+		always = yes
 	}
 
 	effect = {
-		custom_tooltip = ea_auto_assign_exalted_advisors_decision_effect_tt
-		ea_auto_assign_exalted_advisors_for_patron_effect = yes
-		trigger_event = ea_events.1501
+		custom_tooltip = ea_exalted_actions_decision_effect_tt
+		trigger_event = ea_actions.1001
 	}
 
-	ai_potential = {
-		always = no
-	}
-
-	ai_will_do = {
-		base = 0
-	}
-}
-
-ea_auto_strip_all_exalted_advisors_decision = {
-	picture = {
-		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
-	}
-	decision_group_type = major
-	desc = ea_auto_strip_all_exalted_advisors_decision_desc
-	selection_tooltip = ea_auto_strip_all_exalted_advisors_decision_tooltip
-	confirm_text = ea_auto_strip_all_exalted_advisors_decision_confirm
-
-	ai_check_interval = 0
-
-	is_shown = {
-		is_alive = yes
-		has_game_rule = ea_rule_auto_strip_decisions_on
-		OR = {
-			is_ai = no
-			has_game_rule = ea_rule_granting_player_and_ai
-		}
-		ea_has_any_exalted_advisor = yes
-	}
-
-	is_valid = {
-		ea_has_any_exalted_advisor = yes
-	}
-
-	effect = {
-		custom_tooltip = ea_auto_strip_all_exalted_advisors_decision_effect_tt
-		ea_auto_strip_all_exalted_advisors_for_patron_effect = yes
-		trigger_event = ea_events.1502
-	}
-
-	ai_potential = {
-		always = no
-	}
-
-	ai_will_do = {
-		base = 0
-	}
-}
-
-ea_auto_strip_unworthy_exalted_advisors_decision = {
-	picture = {
-		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
-	}
-	decision_group_type = major
-	desc = ea_auto_strip_unworthy_exalted_advisors_decision_desc
-	selection_tooltip = ea_auto_strip_unworthy_exalted_advisors_decision_tooltip
-	confirm_text = ea_auto_strip_unworthy_exalted_advisors_decision_confirm
-
-	ai_check_interval = 0
-
-	is_shown = {
-		is_alive = yes
-		has_game_rule = ea_rule_auto_strip_decisions_on
-		OR = {
-			is_ai = no
-			has_game_rule = ea_rule_granting_player_and_ai
-		}
-		ea_has_any_exalted_advisor = yes
-	}
-
-	is_valid = {
-		ea_has_any_exalted_advisor = yes
-	}
-
-	effect = {
-		custom_tooltip = ea_auto_strip_unworthy_exalted_advisors_decision_effect_tt
-		ea_auto_strip_unworthy_exalted_advisors_for_patron_effect = yes
-		trigger_event = ea_events.1503
-	}
-
-	ai_potential = {
-		always = no
-	}
-
-	ai_will_do = {
-		base = 0
-	}
+	ai_potential = { always = no }
+	ai_will_do = { base = 0 }
 }
 
 ea_manage_exalted_vassals_decision = {
 	picture = {
 		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
 	}
-	decision_group_type = major
+	decision_group_type = ea_exalted
 	desc = ea_manage_exalted_vassals_decision_desc
 	selection_tooltip = ea_manage_exalted_vassals_decision_tooltip
 	confirm_text = ea_manage_exalted_vassals_decision_confirm
@@ -194,44 +105,4 @@ ea_manage_exalted_vassals_decision = {
 	ai_will_do = {
 		base = 0
 	}
-}
-
-ea_mass_bestow_exalted_decision = {
-	picture = {
-		reference = "gfx/interface/illustrations/decisions/decision_misc.dds"
-	}
-	decision_group_type = major
-	desc = ea_mass_bestow_exalted_decision_desc
-	selection_tooltip = ea_mass_bestow_exalted_decision_tooltip
-	confirm_text = ea_mass_bestow_exalted_decision_confirm
-
-	ai_check_interval = 0
-
-	is_shown = {
-		is_alive = yes
-		NOT = { has_game_rule = ea_rule_granting_disabled }
-		OR = {
-			is_ai = no
-			has_game_rule = ea_rule_granting_player_and_ai
-		}
-	}
-
-	is_valid = {
-		custom_tooltip = {
-			text = ea_tt_mass_bestow_has_eligible
-			OR = {
-				ea_has_any_auto_assign_eligible = yes
-				any_vassal = { ea_can_receive_exalted_vassal = yes }
-			}
-		}
-	}
-
-	effect = {
-		custom_tooltip = ea_mass_bestow_exalted_decision_effect_tt
-		ea_mass_bestow_exalted_for_patron_effect = yes
-		trigger_event = ea_events.1504
-	}
-
-	ai_potential = { always = no }
-	ai_will_do = { base = 0 }
 }

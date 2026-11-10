@@ -1,9 +1,9 @@
-﻿l_english:
+﻿ï»¿l_english:
  # Trait
  trait_ea_exalted_advisor:0 "Exalted Advisor"
  trait_ea_exalted_advisor_desc:0 "Appointed to stand among the greatest helpers of their patron's realm. Brilliant, formidable, and clearly outscaled by a Supreme Sovereign."
  trait_ea_exalted_vassal:0 "Exalted Vassal"
- trait_ea_exalted_vassal_desc:0 "A landed pillar of their patron's realm — terrifyingly competent in rule and war, yet still a helper beneath a Supreme Sovereign. Distinct from Exalted Advisors, who shine at court and council."
+ trait_ea_exalted_vassal_desc:0 "A landed pillar of their patron's realm â€” terrifyingly competent in rule and war, yet still a helper beneath a Supreme Sovereign. Distinct from Exalted Advisors, who shine at court and council."
 
  # Interactions
  ea_bestow_exalted_advisor_interaction:0 "Bestow Exalted Advisor"
@@ -23,21 +23,24 @@
  ea_revoke_exalted_vassal_interaction:0 "Revoke Exalted Vassal"
  ea_revoke_exalted_vassal_interaction_desc:0 "Strip [recipient.GetShortUIName] of the Exalted Vassal honor."
 
+ # Decision group
+ decision_group_type_ea_exalted:0 "Exalted Advisor"
+
  # Decisions
  ea_manage_exalted_advisors_decision:0 "Manage Exalted Advisors"
- ea_manage_exalted_advisors_decision_desc:0 "Review Exalted Advisors, cycle shared hub intensity (Low/Mid/High), and assign Marshal/Spymaster/Steward specialties. Bestow, revoke, recall, and Assign Specialty are character interactions; bulk auto-assign/strip are sibling decisions."
+ ea_manage_exalted_advisors_decision_desc:0 "Review who carries your Exalted Advisor honor. Bestow, revoke, and recall are done through character interactions; this decision opens a quick summary. Bulk auto-assign, mass bestow, and strip live under Exalted Advisor: Actions."
  ea_manage_exalted_advisors_decision_tooltip:0 "Open a summary of your Exalted Advisors and how to appoint or strip them"
  ea_manage_exalted_advisors_decision_confirm:0 "Review Advisors"
  ea_manage_exalted_advisors_decision_effect_tt:0 "You will receive a brief overview of your Exalted Advisors"
 
  ea_auto_assign_exalted_advisors_decision:0 "Auto-Assign Exalted Advisors"
- ea_auto_assign_exalted_advisors_decision_desc:0 "Silently elevate every eligible councillor, consort, and courtier/guest up to your Exalted Advisor cap. For a full court-flood fantasy, set Maximum Advisors to Unlimited (or 5). Random realm vassals are not included — use Exalted Vassal for those."
+ ea_auto_assign_exalted_advisors_decision_desc:0 "Silently elevate every eligible councillor, consort, and courtier/guest up to your Exalted Advisor cap. For a full court-flood fantasy, set Maximum Advisors to Unlimited (or 5). Random realm vassals are not included â€” use Exalted Vassal for those."
  ea_auto_assign_exalted_advisors_decision_tooltip:0 "Elevate all eligible courtiers and councillors until the advisor cap"
  ea_auto_assign_exalted_advisors_decision_confirm:0 "Elevate Eligible"
  ea_auto_assign_exalted_advisors_decision_effect_tt:0 "Eligible targets are exalted silently until the cap; leftovers are skipped"
 
  ea_auto_strip_all_exalted_advisors_decision:0 "Strip All Exalted Advisors"
- ea_auto_strip_all_exalted_advisors_decision_desc:0 "Intentionally revoke the Exalted Advisor honor from everyone bound to you. This is a full clear — not the same as flushing those who left the realm."
+ ea_auto_strip_all_exalted_advisors_decision_desc:0 "Intentionally revoke the Exalted Advisor honor from everyone bound to you. This is a full clear â€” not the same as flushing those who left the realm."
  ea_auto_strip_all_exalted_advisors_decision_tooltip:0 "Revoke every Exalted Advisor bound to you"
  ea_auto_strip_all_exalted_advisors_decision_confirm:0 "Strip All"
  ea_auto_strip_all_exalted_advisors_decision_effect_tt:0 "All of your Exalted Advisors are revoked silently"
@@ -54,7 +57,23 @@
  ea_manage_exalted_vassals_decision_confirm:0 "Review Vassals"
  ea_manage_exalted_vassals_decision_effect_tt:0 "You will receive a brief overview of your Exalted Vassals"
 
- # Modifiers — council service
+ # Actions hub
+ ea_exalted_actions_decision:0 "Exalted Advisor: Actions"
+ ea_exalted_actions_decision_desc:0 "Open Advisor Actions: mass bestow court and vassals, auto-assign eligible advisors, or strip all or unworthy holders.\n\nDone is always first. Gated actions stay hidden until ready."
+ ea_exalted_actions_decision_tooltip:0 "Open Advisor Actions for mass bestow, auto-assign, and strip verbs"
+ ea_exalted_actions_decision_confirm:0 "Open Actions"
+ ea_exalted_actions_decision_effect_tt:0 "Opens the Exalted Advisor Actions hub"
+
+ ea_actions.1001.t:0 "Advisor Actions"
+ ea_actions.1001.desc:0 "Choose an Advisor action. Done closes the hub. Gated actions stay hidden until ready. Mass bestow and strip show their own summary when finished."
+ ea_actions.1001.close:0 "Done"
+ ea_actions.1001.mass_bestow:0 "Mass Bestow Exalted"
+ ea_actions.1001.auto_assign:0 "Auto-Assign Exalted Advisors"
+ ea_actions.1001.strip_all:0 "Strip All Exalted Advisors"
+ ea_actions.1001.strip_unworthy:0 "Strip Unworthy Exalted Advisors"
+ ea_actions.tt.close:0 "Close Advisor Actions without taking an action."
+
+ # Modifiers â€” council service
  ea_council_service_modifier:0 "Exalted Council Service"
  ea_council_service_modifier_desc:0 "Serving on their patron's council focuses an Exalted Advisor's brilliance."
  ea_council_chancellor_modifier:0 "Exalted Chancellor"
@@ -70,7 +89,7 @@
  ea_council_spouse_modifier:0 "Exalted Spouse Councillor"
  ea_council_spouse_modifier_desc:0 "Seat synergy for an Exalted Advisor as Spouse Councillor."
 
- # Modifiers — court aura
+ # Modifiers â€” court aura
  ea_court_aura_1_modifier:0 "Exalted Court Aura"
  ea_court_aura_1_modifier_desc:0 "One Exalted Advisor serves in your realm, sharpening your court."
  ea_court_aura_2_modifier:0 "Court of Exalted Advisors"
@@ -180,11 +199,11 @@
 
  # Events
  ea_events.1001.t:0 "An Exalted Advisor Appointed"
- ea_events.1001.desc:0 "You have elevated a trusted figure to Exalted Advisor. Their brilliance will serve your realm — so long as they remain bound to it."
+ ea_events.1001.desc:0 "You have elevated a trusted figure to Exalted Advisor. Their brilliance will serve your realm â€” so long as they remain bound to it."
  ea_events.1001.a:0 "Excellent."
 
  ea_events.1002.t:0 "Exalted"
- ea_events.1002.desc:0 "Your patron has named you Exalted Advisor. The honor is great — and tied to remaining in their realm."
+ ea_events.1002.desc:0 "Your patron has named you Exalted Advisor. The honor is great â€” and tied to remaining in their realm."
  ea_events.1002.a:0 "I will prove worthy."
 
  ea_events.1101.t:0 "Exalted Advisor Revoked"
@@ -192,7 +211,7 @@
  ea_events.1101.a:0 "So be it."
 
  ea_events.1201.t:0 "Exaltation Lapsed"
- ea_events.1201.desc:0 "An Exalted Advisor no longer remains in your realm. The honor has lapsed — not by your decree, but by departure from your court and vassalage."
+ ea_events.1201.desc:0 "An Exalted Advisor no longer remains in your realm. The honor has lapsed â€” not by your decree, but by departure from your court and vassalage."
  ea_events.1201.a:0 "A pity."
 
  ea_events.1202.t:0 "Exaltation Ended"
@@ -205,7 +224,7 @@
  ea_events.1401.a_tt:0 "Right-click the advisor and choose Recall Exalted Advisor"
 
  ea_events.1402.t:0 "Honor Wavering"
- ea_events.1402.desc:0 "Far from your patron's realm, your Exalted Advisor honor wavers. Return — or be recalled — before it fades."
+ ea_events.1402.desc:0 "Far from your patron's realm, your Exalted Advisor honor wavers. Return â€” or be recalled â€” before it fades."
  ea_events.1402.a:0 "I must not linger"
 
  ea_events.1403.t:0 "Advisor Recalled"
@@ -217,7 +236,7 @@
  ea_events.1404.a:0 "Too late"
 
  ea_events.1501.t:0 "Court Elevated"
- ea_events.1501.desc:0 "You have elevated every eligible councillor, consort, and courtier up to your Exalted Advisor cap. Anyone beyond the cap was skipped — raise Maximum Advisors (Unlimited or 5) if you want a fuller court."
+ ea_events.1501.desc:0 "You have elevated every eligible councillor, consort, and courtier up to your Exalted Advisor cap. Anyone beyond the cap was skipped â€” raise Maximum Advisors (Unlimited or 5) if you want a fuller court."
  ea_events.1501.a:0 "A court worthy of legend"
 
  ea_events.1502.t:0 "Honor Cleared"
@@ -225,15 +244,15 @@
  ea_events.1502.a:0 "Done"
 
  ea_events.1503.t:0 "Unworthy Flushed"
- ea_events.1503.desc:0 "Advisors who left your realm — or whose recall grace expired — have been evaluated and stripped where the rules demand. Loyal in-realm advisors remain exalted."
+ ea_events.1503.desc:0 "Advisors who left your realm â€” or whose recall grace expired â€” have been evaluated and stripped where the rules demand. Loyal in-realm advisors remain exalted."
  ea_events.1503.a:0 "The court is pruned"
 
  ea_events.1601.t:0 "An Exalted Vassal Appointed"
- ea_events.1601.desc:0 "You have elevated a landed vassal to Exalted Vassal. Their strength will shore up your realm — so long as they remain your vassal."
+ ea_events.1601.desc:0 "You have elevated a landed vassal to Exalted Vassal. Their strength will shore up your realm â€” so long as they remain your vassal."
  ea_events.1601.a:0 "Let them rule well."
 
  ea_events.1602.t:0 "Exalted Vassal"
- ea_events.1602.desc:0 "Your liege has named you Exalted Vassal. The honor is great — and tied to remaining their vassal."
+ ea_events.1602.desc:0 "Your liege has named you Exalted Vassal. The honor is great â€” and tied to remaining their vassal."
  ea_events.1602.a:0 "I will hold the land."
 
  ea_events.1611.t:0 "Exalted Vassal Revoked"
@@ -249,7 +268,7 @@
  ea_events.1622.a:0 "I understand."
 
  ea_events.2001.t:0 "Your Exalted Advisors"
- ea_events.2001.desc:0 "Cycle shared advisor intensity, then use interactions to Bestow, Revoke, Recall, or Assign Specialty.\n\nBulk Auto-Assign and Strip sit beside Manage.\nLoud bestow opens a Marshal / Spymaster / Steward chooser; silent mass/auto/birth stay generic.\nChildren educated by your Exalted Advisors gain lifestyle crumbs (soft peer to Supreme Sovereign Reshape Heir)."
+ ea_events.2001.desc:0 "Use character interactions to Bestow, Revoke, or Recall the Exalted Advisor honor. Mass bestow, auto-assign, and strip live under Exalted Advisor: Actions in the decision list.\n\nBestow: right-click a courtier, guest, or vassal.\nRevoke: right-click one of your Exalted Advisors.\nRecall: right-click an advisor who is abroad."
  ea_events.2001.a:0 "I will use interactions"
  ea_events.2001.a_tt:0 "Bestow, Revoke, and Recall are available as character interactions"
  ea_events.2001.b:0 "I still have Exalted Advisors"
@@ -270,29 +289,26 @@
  ea_mass_bestow_exalted_decision_effect_tt:0 "Eligible advisors and vassals are exalted silently until their caps"
  ea_tt_mass_bestow_has_eligible:0 "At least one eligible courtier or vassal can receive exaltation"
  ea_events.1504.t:0 "Mass Bestowal Complete"
- ea_events.1504.desc:0 "Your court and realm swell with exalted servants. Anyone beyond the advisor or vassal caps was skipped — raise the Maximum rules if you want a fuller flood. Children of Exalted Advisors may inherit the honor at birth when their parent's patron still has room."
+ ea_events.1504.desc:0 "Your court and realm swell with exalted servants. Anyone beyond the advisor or vassal caps was skipped â€” raise the Maximum rules if you want a fuller flood. Children of Exalted Advisors may inherit the honor at birth when their parent's patron still has room."
  ea_events.1504.a:0 "Let them serve"
 
- # v0.5.0 — intensity / specialists / loyalty / tutoring
+ # --- next-iter keys preserved from main ---
  ea_assign_advisor_specialty_interaction:0 "Assign Advisor Specialty"
  ea_assign_advisor_specialty_interaction_desc:0 "Set [recipient.GetShortUIName]'s lasting Exalted specialty: Marshal, Spymaster, Steward, or keep them generic. Shared hub intensity scales the package."
-
- ea_events.2001.intensity_low:0 "Intensity: Low → Mid"
- ea_events.2001.intensity_mid:0 "Intensity: Mid → High"
- ea_events.2001.intensity_high:0 "Intensity: High → Low"
+ ea_events.2001.intensity_low:0 "Intensity: Low â†’ Mid"
+ ea_events.2001.intensity_mid:0 "Intensity: Mid â†’ High"
+ ea_events.2001.intensity_high:0 "Intensity: High â†’ Low"
  ea_events.2001.intensity_tt:0 "Shared Low / Mid / High dial for specialist packages and council seat synergy. Cycles and reopens this hub."
-
  ea_events.2201.t:0 "Exalted Specialty"
  ea_events.2201.desc:0 "What lasting specialty should this Exalted Advisor carry? Intensity from Manage Exalted Advisors scales the package. Keep generic for chancellor, chaplain, or court helper fantasy."
  ea_events.2201.marshal:0 "Marshal-Exalted"
  ea_events.2201.marshal_tt:0 "Lasting martial lean with mild advantage and knight effectiveness"
  ea_events.2201.spymaster:0 "Spymaster-Exalted"
- ea_events.2201.spymaster_tt:0 "Lasting intrigue lean with mild scheme punch — not Supreme Schemes tempo or Demand Strong Hook"
+ ea_events.2201.spymaster_tt:0 "Lasting intrigue lean with mild scheme punch â€” not Supreme Schemes tempo or Demand Strong Hook"
  ea_events.2201.steward:0 "Steward-Exalted"
  ea_events.2201.steward_tt:0 "Lasting stewardship lean with mild build speed and income crumbs"
  ea_events.2201.generic:0 "Keep Generic"
  ea_events.2201.generic_tt:0 "No lasting specialty package; temporary council seat synergy still applies when appointed"
-
  ea_specialist_marshal_1_modifier:0 "Marshal-Exalted (Low)"
  ea_specialist_marshal_1_modifier_desc:0 "Lasting Marshal specialty at Low intensity."
  ea_specialist_marshal_2_modifier:0 "Marshal-Exalted"
@@ -311,7 +327,6 @@
  ea_specialist_steward_2_modifier_desc:0 "Lasting Steward specialty at Mid intensity."
  ea_specialist_steward_3_modifier:0 "Steward-Exalted (High)"
  ea_specialist_steward_3_modifier_desc:0 "Lasting Steward specialty at High intensity."
-
  ea_council_service_1_modifier:0 "Exalted Council Service (Low)"
  ea_council_service_1_modifier_desc:0 "Council service at Low intensity."
  ea_council_service_2_modifier:0 "Exalted Council Service"
@@ -354,13 +369,10 @@
  ea_council_spouse_2_modifier_desc:0 "Seat synergy at Mid intensity."
  ea_council_spouse_3_modifier:0 "Exalted Spouse Councillor (High)"
  ea_council_spouse_3_modifier_desc:0 "Seat synergy at High intensity."
-
  ea_vassal_loyalty_modifier:0 "Exalted Vassal Loyalty"
- ea_vassal_loyalty_modifier_desc:0 "Soft Glue–lite loyalty toward the Exalted Vassal's patron. Refreshed while the bond holds."
+ ea_vassal_loyalty_modifier_desc:0 "Soft Glueâ€“lite loyalty toward the Exalted Vassal's patron. Refreshed while the bond holds."
  ea_vassal_loyalty_opinion:0 "Exalted Vassal Loyalty"
-
  ea_tt_can_receive_specialty:0 "Target is your Exalted Advisor"
-
  rule_ea_rule_intensity_default:0 "Exalted Advisor: Starting Intensity"
  setting_ea_rule_intensity_default_low:0 "Low"
  setting_ea_rule_intensity_default_low_desc:0 "New patrons start at Low intensity for specialist packages and council seat synergy. Manage hub can still cycle."
@@ -368,16 +380,13 @@
  setting_ea_rule_intensity_default_mid_desc:0 "New patrons start at Mid intensity."
  setting_ea_rule_intensity_default_high:0 "High"
  setting_ea_rule_intensity_default_high_desc:0 "New patrons start at High intensity (default). Hub cycling still works after start."
-
  rule_ea_rule_vassal_loyalty:0 "Exalted Vassal: Loyalty Network"
  setting_ea_rule_vassal_loyalty_on:0 "On"
- setting_ea_rule_vassal_loyalty_on_desc:0 "Exalted Vassals periodically refresh Soft Glue–lite loyalty toward their patron. Mid/High intensity may also drip a weak favor hook — never a strong hook / Demand Strong Hook clone."
+ setting_ea_rule_vassal_loyalty_on_desc:0 "Exalted Vassals periodically refresh Soft Glueâ€“lite loyalty toward their patron. Mid/High intensity may also drip a weak favor hook â€” never a strong hook / Demand Strong Hook clone."
  setting_ea_rule_vassal_loyalty_off:0 "Off"
  setting_ea_rule_vassal_loyalty_off_desc:0 "No loyalty pulse or weak-hook drip from Exalted Vassals."
-
  rule_ea_rule_heir_tutoring:0 "Exalted Advisor: Heir Tutoring"
  setting_ea_rule_heir_tutoring_on:0 "On"
- setting_ea_rule_heir_tutoring_on_desc:0 "Children educated by an Exalted Advisor gain lifestyle XP crumbs each year (specialty-flavored when assigned). High intensity may grant one perk point once. Soft peer to Supreme Sovereign Reshape Heir — does not replace it."
+ setting_ea_rule_heir_tutoring_on_desc:0 "Children educated by an Exalted Advisor gain lifestyle XP crumbs each year (specialty-flavored when assigned). High intensity may grant one perk point once. Soft peer to Supreme Sovereign Reshape Heir â€” does not replace it."
  setting_ea_rule_heir_tutoring_off:0 "Off"
  setting_ea_rule_heir_tutoring_off_desc:0 "No tutoring crumbs from Exalted Advisor guardians."
-

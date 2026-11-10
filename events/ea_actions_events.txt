@@ -1,0 +1,77 @@
+namespace = ea_actions
+
+# Exalted Advisor Actions hub — Done first (SS/EC craft).
+# Former major verbs: mass bestow, auto-assign, strip all, strip unworthy.
+# Event options hide when gated (engine has no grey-out for event options).
+# Toast summary events own the next click — do not re-open this hub after them.
+
+ea_actions.1001 = {
+	type = character_event
+	title = ea_actions.1001.t
+	theme = stewardship
+
+	desc = ea_actions.1001.desc
+
+	# Done first — closes hub
+	option = {
+		name = ea_actions.1001.close
+		custom_tooltip = ea_actions.tt.close
+	}
+
+	# Mass Bestow Exalted
+	option = {
+		name = ea_actions.1001.mass_bestow
+		trigger = {
+			NOT = { has_game_rule = ea_rule_granting_disabled }
+			custom_tooltip = {
+				text = ea_tt_mass_bestow_has_eligible
+				OR = {
+					ea_has_any_auto_assign_eligible = yes
+					any_vassal = { ea_can_receive_exalted_vassal = yes }
+				}
+			}
+		}
+		custom_tooltip = ea_mass_bestow_exalted_decision_effect_tt
+		ea_mass_bestow_exalted_for_patron_effect = yes
+		trigger_event = ea_events.1504
+	}
+
+	# Auto-Assign Exalted Advisors
+	option = {
+		name = ea_actions.1001.auto_assign
+		trigger = {
+			NOT = { has_game_rule = ea_rule_granting_disabled }
+			custom_tooltip = {
+				text = ea_tt_auto_assign_has_eligible
+				ea_has_any_auto_assign_eligible = yes
+			}
+		}
+		custom_tooltip = ea_auto_assign_exalted_advisors_decision_effect_tt
+		ea_auto_assign_exalted_advisors_for_patron_effect = yes
+		trigger_event = ea_events.1501
+	}
+
+	# Strip All Exalted Advisors
+	option = {
+		name = ea_actions.1001.strip_all
+		trigger = {
+			has_game_rule = ea_rule_auto_strip_decisions_on
+			ea_has_any_exalted_advisor = yes
+		}
+		custom_tooltip = ea_auto_strip_all_exalted_advisors_decision_effect_tt
+		ea_auto_strip_all_exalted_advisors_for_patron_effect = yes
+		trigger_event = ea_events.1502
+	}
+
+	# Strip Unworthy Exalted Advisors
+	option = {
+		name = ea_actions.1001.strip_unworthy
+		trigger = {
+			has_game_rule = ea_rule_auto_strip_decisions_on
+			ea_has_any_exalted_advisor = yes
+		}
+		custom_tooltip = ea_auto_strip_unworthy_exalted_advisors_decision_effect_tt
+		ea_auto_strip_unworthy_exalted_advisors_for_patron_effect = yes
+		trigger_event = ea_events.1503
+	}
+}
