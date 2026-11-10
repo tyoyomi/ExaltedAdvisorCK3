@@ -421,3 +421,49 @@ ea_revoke_exalted_vassal_interaction = {
 		base = 0
 	}
 }
+
+ea_assign_advisor_specialty_interaction = {
+	category = interaction_category_friendly
+	icon = council
+	interface_priority = 58
+	common_interaction = yes
+
+	desc = ea_assign_advisor_specialty_interaction_desc
+
+	auto_accept = yes
+
+	is_shown = {
+		NOT = { has_game_rule = ea_rule_granting_disabled }
+		scope:actor = {
+			is_alive = yes
+			ea_can_assign_specialty_actor = yes
+		}
+		scope:recipient = {
+			is_alive = yes
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:actor
+		}
+	}
+
+	is_valid_showing_failures_only = {
+		scope:recipient = {
+			custom_tooltip = {
+				text = ea_tt_can_receive_specialty
+				ea_can_receive_specialty_assignment = yes
+			}
+		}
+	}
+
+	on_accept = {
+		scope:recipient = { save_scope_as = ea_new_advisor }
+		scope:actor = {
+			ea_ensure_advisor_defaults_effect = yes
+			trigger_event = ea_events.2201
+		}
+	}
+
+	ai_will_do = {
+		base = 0
+	}
+}

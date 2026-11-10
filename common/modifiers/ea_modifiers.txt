@@ -1,87 +1,222 @@
-# Exalted Advisor — temporary council service + court aura modifiers
-# Tunables mirrored in script_values for documentation; applied as literals here (@ works at file top).
+# Exalted Advisor — council service, court aura, specialists, loyalty
+# Intensity tiers: 1 = Low, 2 = Mid, 3 = High (shared hub dial on patron).
 
 @ea_council_lifestyle_xp = 0.5
 @ea_council_monthly_prestige = 2
 @ea_council_stress_gain = -0.1
 @ea_council_scheme_resistance = 15
-@ea_council_seat_skill = 10
 @ea_council_fellow_vassal_opinion = 10
-@ea_council_advantage = 5
-@ea_council_build_speed = -5
-@ea_council_scheme_power = 15
 @ea_council_chaplain_piety = 5
-@ea_council_spouse_skill = 5
+
+# Seat skill / side by intensity
+@ea_seat_skill_1 = 5
+@ea_seat_skill_2 = 10
+@ea_seat_skill_3 = 15
+@ea_seat_advantage_1 = 2
+@ea_seat_advantage_2 = 5
+@ea_seat_advantage_3 = 8
+@ea_seat_build_1 = -3
+@ea_seat_build_2 = -5
+@ea_seat_build_3 = -8
+@ea_seat_scheme_1 = 8
+@ea_seat_scheme_2 = 15
+@ea_seat_scheme_3 = 22
+@ea_seat_spouse_1 = 3
+@ea_seat_spouse_2 = 5
+@ea_seat_spouse_3 = 8
 
 @ea_aura_1_prestige = 3
 @ea_aura_1_grandeur = 5
 @ea_aura_1_stress_loss = 0.1
 @ea_aura_1_diplomacy = 2
-
 @ea_aura_2_prestige = 5
 @ea_aura_2_grandeur = 8
 @ea_aura_2_stress_loss = 0.15
 @ea_aura_2_skill = 3
-
 @ea_aura_3_prestige = 8
 @ea_aura_3_grandeur = 12
 @ea_aura_3_stress_loss = 0.2
 @ea_aura_3_skill = 4
 @ea_aura_3_prestige_mult = 0.05
 
-### Council service — base (any patron council seat)
-ea_council_service_modifier = {
+# Specialist lasting packages by intensity
+@ea_spec_skill_1 = 5
+@ea_spec_skill_2 = 10
+@ea_spec_skill_3 = 15
+@ea_spec_advantage_1 = 2
+@ea_spec_advantage_2 = 4
+@ea_spec_advantage_3 = 6
+@ea_spec_knight_1 = 0.05
+@ea_spec_knight_2 = 0.1
+@ea_spec_knight_3 = 0.15
+@ea_spec_scheme_1 = 8
+@ea_spec_scheme_2 = 15
+@ea_spec_scheme_3 = 22
+@ea_spec_build_1 = -5
+@ea_spec_build_2 = -10
+@ea_spec_build_3 = -15
+@ea_spec_tax_1 = 0.05
+@ea_spec_tax_2 = 0.1
+@ea_spec_tax_3 = 0.15
+
+@ea_loyalty_scheme_resist = 10
+
+### Council service base (any seat) — intensity tiers
+ea_council_service_1_modifier = {
+	monthly_lifestyle_xp_gain_mult = 0.25
+	monthly_prestige = 1
+	stress_gain_mult = -0.05
+	enemy_hostile_scheme_success_chance_add = -8
+	enemy_hostile_scheme_phase_duration_add = 8
+}
+
+ea_council_service_2_modifier = {
 	monthly_lifestyle_xp_gain_mult = @ea_council_lifestyle_xp
 	monthly_prestige = @ea_council_monthly_prestige
 	stress_gain_mult = @ea_council_stress_gain
-	# Valid character-modifier stand-in for "scheme resistance"
 	enemy_hostile_scheme_success_chance_add = -15
 	enemy_hostile_scheme_phase_duration_add = @ea_council_scheme_resistance
 }
 
-### Seat overlays (mutually exclusive; applied with base)
+ea_council_service_3_modifier = {
+	monthly_lifestyle_xp_gain_mult = 0.75
+	monthly_prestige = 3
+	stress_gain_mult = -0.15
+	enemy_hostile_scheme_success_chance_add = -22
+	enemy_hostile_scheme_phase_duration_add = 22
+}
+
+# Legacy alias kept cleared by sync (pre-0.5.0 saves)
+ea_council_service_modifier = {
+	monthly_lifestyle_xp_gain_mult = @ea_council_lifestyle_xp
+	monthly_prestige = @ea_council_monthly_prestige
+	stress_gain_mult = @ea_council_stress_gain
+	enemy_hostile_scheme_success_chance_add = -15
+	enemy_hostile_scheme_phase_duration_add = @ea_council_scheme_resistance
+}
+
+### Seat overlays — intensity tiers
+ea_council_chancellor_1_modifier = {
+	diplomacy = @ea_seat_skill_1
+	fellow_vassal_opinion = 5
+}
+ea_council_chancellor_2_modifier = {
+	diplomacy = @ea_seat_skill_2
+	fellow_vassal_opinion = @ea_council_fellow_vassal_opinion
+}
+ea_council_chancellor_3_modifier = {
+	diplomacy = @ea_seat_skill_3
+	fellow_vassal_opinion = 15
+}
 ea_council_chancellor_modifier = {
-	diplomacy = @ea_council_seat_skill
+	diplomacy = @ea_seat_skill_2
 	fellow_vassal_opinion = @ea_council_fellow_vassal_opinion
 }
 
+ea_council_marshal_1_modifier = {
+	martial = @ea_seat_skill_1
+	advantage = @ea_seat_advantage_1
+}
+ea_council_marshal_2_modifier = {
+	martial = @ea_seat_skill_2
+	advantage = @ea_seat_advantage_2
+}
+ea_council_marshal_3_modifier = {
+	martial = @ea_seat_skill_3
+	advantage = @ea_seat_advantage_3
+}
 ea_council_marshal_modifier = {
-	martial = @ea_council_seat_skill
-	advantage = @ea_council_advantage
+	martial = @ea_seat_skill_2
+	advantage = @ea_seat_advantage_2
 }
 
+ea_council_steward_1_modifier = {
+	stewardship = @ea_seat_skill_1
+	build_speed = @ea_seat_build_1
+}
+ea_council_steward_2_modifier = {
+	stewardship = @ea_seat_skill_2
+	build_speed = @ea_seat_build_2
+}
+ea_council_steward_3_modifier = {
+	stewardship = @ea_seat_skill_3
+	build_speed = @ea_seat_build_3
+}
 ea_council_steward_modifier = {
-	stewardship = @ea_council_seat_skill
-	build_speed = @ea_council_build_speed
+	stewardship = @ea_seat_skill_2
+	build_speed = @ea_seat_build_2
 }
 
+ea_council_spymaster_1_modifier = {
+	intrigue = @ea_seat_skill_1
+	owned_hostile_scheme_success_chance_add = @ea_seat_scheme_1
+}
+ea_council_spymaster_2_modifier = {
+	intrigue = @ea_seat_skill_2
+	owned_hostile_scheme_success_chance_add = @ea_seat_scheme_2
+}
+ea_council_spymaster_3_modifier = {
+	intrigue = @ea_seat_skill_3
+	owned_hostile_scheme_success_chance_add = @ea_seat_scheme_3
+}
 ea_council_spymaster_modifier = {
-	intrigue = @ea_council_seat_skill
-	# Valid character-modifier stand-in for "scheme power"
-	owned_hostile_scheme_success_chance_add = @ea_council_scheme_power
+	intrigue = @ea_seat_skill_2
+	owned_hostile_scheme_success_chance_add = @ea_seat_scheme_2
 }
 
+ea_council_chaplain_1_modifier = {
+	learning = @ea_seat_skill_1
+	monthly_piety = 3
+}
+ea_council_chaplain_2_modifier = {
+	learning = @ea_seat_skill_2
+	monthly_piety = @ea_council_chaplain_piety
+}
+ea_council_chaplain_3_modifier = {
+	learning = @ea_seat_skill_3
+	monthly_piety = 8
+}
 ea_council_chaplain_modifier = {
-	learning = @ea_council_seat_skill
+	learning = @ea_seat_skill_2
 	monthly_piety = @ea_council_chaplain_piety
 }
 
+ea_council_spouse_1_modifier = {
+	diplomacy = @ea_seat_spouse_1
+	martial = @ea_seat_spouse_1
+	stewardship = @ea_seat_spouse_1
+	intrigue = @ea_seat_spouse_1
+	learning = @ea_seat_spouse_1
+}
+ea_council_spouse_2_modifier = {
+	diplomacy = @ea_seat_spouse_2
+	martial = @ea_seat_spouse_2
+	stewardship = @ea_seat_spouse_2
+	intrigue = @ea_seat_spouse_2
+	learning = @ea_seat_spouse_2
+}
+ea_council_spouse_3_modifier = {
+	diplomacy = @ea_seat_spouse_3
+	martial = @ea_seat_spouse_3
+	stewardship = @ea_seat_spouse_3
+	intrigue = @ea_seat_spouse_3
+	learning = @ea_seat_spouse_3
+}
 ea_council_spouse_modifier = {
-	diplomacy = @ea_council_spouse_skill
-	martial = @ea_council_spouse_skill
-	stewardship = @ea_council_spouse_skill
-	intrigue = @ea_council_spouse_skill
-	learning = @ea_council_spouse_skill
+	diplomacy = @ea_seat_spouse_2
+	martial = @ea_seat_spouse_2
+	stewardship = @ea_seat_spouse_2
+	intrigue = @ea_seat_spouse_2
+	learning = @ea_seat_spouse_2
 }
 
-### Court aura — on the patron (tiered; replace, do not stack)
+### Court aura — count-tiered (unchanged this wave)
 ea_court_aura_1_modifier = {
 	monthly_prestige = @ea_aura_1_prestige
 	court_grandeur_baseline_add = @ea_aura_1_grandeur
 	stress_loss_mult = @ea_aura_1_stress_loss
 	diplomacy = @ea_aura_1_diplomacy
 }
-
 ea_court_aura_2_modifier = {
 	monthly_prestige = @ea_aura_2_prestige
 	court_grandeur_baseline_add = @ea_aura_2_grandeur
@@ -90,7 +225,6 @@ ea_court_aura_2_modifier = {
 	stewardship = @ea_aura_2_skill
 	learning = @ea_aura_2_skill
 }
-
 ea_court_aura_3_modifier = {
 	monthly_prestige = @ea_aura_3_prestige
 	court_grandeur_baseline_add = @ea_aura_3_grandeur
@@ -101,4 +235,60 @@ ea_court_aura_3_modifier = {
 	intrigue = @ea_aura_3_skill
 	learning = @ea_aura_3_skill
 	monthly_prestige_gain_mult = @ea_aura_3_prestige_mult
+}
+
+### Specialist lasting packages (Marshal / Spymaster / Steward × intensity)
+ea_specialist_marshal_1_modifier = {
+	martial = @ea_spec_skill_1
+	advantage = @ea_spec_advantage_1
+	knight_effectiveness_mult = @ea_spec_knight_1
+}
+ea_specialist_marshal_2_modifier = {
+	martial = @ea_spec_skill_2
+	advantage = @ea_spec_advantage_2
+	knight_effectiveness_mult = @ea_spec_knight_2
+}
+ea_specialist_marshal_3_modifier = {
+	martial = @ea_spec_skill_3
+	advantage = @ea_spec_advantage_3
+	knight_effectiveness_mult = @ea_spec_knight_3
+}
+
+ea_specialist_spymaster_1_modifier = {
+	intrigue = @ea_spec_skill_1
+	owned_hostile_scheme_success_chance_add = @ea_spec_scheme_1
+	enemy_hostile_scheme_success_chance_add = -5
+}
+ea_specialist_spymaster_2_modifier = {
+	intrigue = @ea_spec_skill_2
+	owned_hostile_scheme_success_chance_add = @ea_spec_scheme_2
+	enemy_hostile_scheme_success_chance_add = -10
+}
+ea_specialist_spymaster_3_modifier = {
+	intrigue = @ea_spec_skill_3
+	owned_hostile_scheme_success_chance_add = @ea_spec_scheme_3
+	enemy_hostile_scheme_success_chance_add = -15
+}
+
+ea_specialist_steward_1_modifier = {
+	stewardship = @ea_spec_skill_1
+	build_speed = @ea_spec_build_1
+	monthly_income = 1
+}
+ea_specialist_steward_2_modifier = {
+	stewardship = @ea_spec_skill_2
+	build_speed = @ea_spec_build_2
+	monthly_income = 2
+}
+ea_specialist_steward_3_modifier = {
+	stewardship = @ea_spec_skill_3
+	build_speed = @ea_spec_build_3
+	monthly_income = 3
+}
+
+### Vassal loyalty Soft Glue–lite (on EV; refreshed yearly)
+ea_vassal_loyalty_modifier = {
+	enemy_hostile_scheme_success_chance_add = -10
+	enemy_hostile_scheme_phase_duration_add = @ea_loyalty_scheme_resist
+	stress_gain_mult = -0.1
 }

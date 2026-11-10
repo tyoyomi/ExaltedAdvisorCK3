@@ -1,0 +1,5 @@
+ea_vassal_loyalty_opinion = {
+	monthly = yes
+	decaying = no
+	opinion = 25
+}

@@ -27,22 +27,21 @@ ea_actor_may_bestow_by_rule = {
 }
 
 ea_patron_under_advisor_cap = {
-	# this = patron/actor. Save before any_living_character (where this becomes the iteratee).
-	# Do not use root — unset in character-interaction validity scopes.
+	# this = patron/actor. Binder list only (no full-world). Empty list ⇒ under cap
+	# until yearly/apply reindexes mid-save binders.
 	trigger_if = {
 		limit = { has_game_rule = ea_rule_max_advisors_unlimited }
 		always = yes
 	}
 	trigger_else = {
-		save_temporary_scope_as = ea_cap_patron
 		custom_tooltip = {
 			text = ea_tt_under_advisor_cap
 			NOT = {
-				any_living_character = {
+				any_in_list = {
+					variable = ea_bound_advisors
 					count >= ea_max_advisors_value
+					is_alive = yes
 					has_trait = ea_exalted_advisor
-					exists = var:ea_patron
-					var:ea_patron = scope:ea_cap_patron
 				}
 			}
 		}
@@ -55,15 +54,14 @@ ea_patron_under_ev_cap = {
 		always = yes
 	}
 	trigger_else = {
-		save_temporary_scope_as = ea_ev_cap_patron
 		custom_tooltip = {
 			text = ea_tt_under_ev_cap
 			NOT = {
-				any_living_character = {
+				any_in_list = {
+					variable = ea_bound_vassals
 					count >= ea_max_exalted_vassals_value
+					is_alive = yes
 					has_trait = ea_exalted_vassal
-					exists = var:ea_ev_patron
-					var:ea_ev_patron = scope:ea_ev_cap_patron
 				}
 			}
 		}
@@ -360,19 +358,40 @@ ea_is_recallable = {
 # Has at least one EA bound to this as patron
 ea_has_any_exalted_advisor = {
 	save_temporary_scope_as = ea_check_patron
-	any_living_character = {
-		has_trait = ea_exalted_advisor
-		exists = var:ea_patron
-		var:ea_patron = scope:ea_check_patron
+	OR = {
+		any_in_list = {
+			variable = ea_bound_advisors
+			count >= 1
+			is_alive = yes
+			has_trait = ea_exalted_advisor
+		}
+		any_vassal = {
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:ea_check_patron
+		}
+		any_courtier_or_guest = {
+			has_trait = ea_exalted_advisor
+			exists = var:ea_patron
+			var:ea_patron = scope:ea_check_patron
+		}
 	}
 }
 
 ea_has_any_exalted_vassal = {
 	save_temporary_scope_as = ea_check_ev_patron
-	any_living_character = {
-		has_trait = ea_exalted_vassal
-		exists = var:ea_ev_patron
-		var:ea_ev_patron = scope:ea_check_ev_patron
+	OR = {
+		any_in_list = {
+			variable = ea_bound_vassals
+			count >= 1
+			is_alive = yes
+			has_trait = ea_exalted_vassal
+		}
+		any_vassal = {
+			has_trait = ea_exalted_vassal
+			exists = var:ea_ev_patron
+			var:ea_ev_patron = scope:ea_check_ev_patron
+		}
 	}
 }
 
@@ -390,4 +409,48 @@ ea_has_any_auto_assign_eligible = {
 			ea_eligible_for_auto_assign_pool = yes
 		}
 	}
+}
+
+# v0.5.0 — tutoring + specialty gates
+ea_child_eligible_for_ea_tutoring = {
+	is_alive = yes
+	is_adult = no
+	has_game_rule = ea_rule_heir_tutoring_on
+	exists = guardian
+	guardian = {
+		is_alive = yes
+		has_trait = ea_exalted_advisor
+		exists = var:ea_patron
+		var:ea_patron = { is_alive = yes }
+	}
+	# Patron is child's parent or liege (soft realm link)
+	OR = {
+		AND = {
+			exists = mother
+			mother = { is_alive = yes }
+			guardian = { var:ea_patron = root.mother }
+		}
+		AND = {
+			exists = father
+			father = { is_alive = yes }
+			guardian = { var:ea_patron = root.father }
+		}
+		AND = {
+			exists = liege
+			liege = { is_alive = yes }
+			guardian = { var:ea_patron = root.liege }
+		}
+	}
+}
+
+ea_can_assign_specialty_actor = {
+	is_alive = yes
+	ea_actor_may_bestow_by_rule = yes
+}
+
+ea_can_receive_specialty_assignment = {
+	is_alive = yes
+	has_trait = ea_exalted_advisor
+	exists = var:ea_patron
+	var:ea_patron = scope:actor
 }

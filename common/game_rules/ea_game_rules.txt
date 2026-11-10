@@ -178,3 +178,49 @@ ea_rule_advisor_vassal_exclusion = {
 	ea_rule_advisor_vassal_exclusion_allow_both = {
 	}
 }
+
+### v0.5.0 — intensity / loyalty / tutoring
+ea_rule_intensity_default = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_intensity_default_high
+
+	ea_rule_intensity_default_low = {
+	}
+
+	ea_rule_intensity_default_mid = {
+	}
+
+	ea_rule_intensity_default_high = {
+	}
+}
+
+ea_rule_vassal_loyalty = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_vassal_loyalty_on
+
+	ea_rule_vassal_loyalty_on = {
+	}
+
+	ea_rule_vassal_loyalty_off = {
+	}
+}
+
+ea_rule_heir_tutoring = {
+	categories = {
+		tweaks
+	}
+
+	default = ea_rule_heir_tutoring_on
+
+	ea_rule_heir_tutoring_on = {
+	}
+
+	ea_rule_heir_tutoring_off = {
+	}
+}
